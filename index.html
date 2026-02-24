@@ -1,0 +1,1919 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Review Tool</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: rgba(30, 30, 55, 0.7);
+            --bg-glass: rgba(40, 40, 80, 0.35);
+            --border: rgba(100, 100, 180, 0.2);
+            --border-focus: rgba(130, 100, 255, 0.5);
+            --text-primary: #e8e8f0;
+            --text-secondary: #a0a0c0;
+            --text-muted: #6a6a8e;
+            --accent-indigo: #7c5cfc;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-gradient: linear-gradient(135deg, #7c5cfc, #a855f7);
+            --shadow-glow: 0 0 30px rgba(124, 92, 252, 0.15);
+            /* Comment type colors */
+            --color-comment: #64748b;
+            --color-todo: #f59e0b;
+            --color-improve: #10b981;
+            --color-clarify: #3b82f6;
+            --color-check: #ef4444;
+            --color-restructure: #a855f7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* â•â•â• TOP BAR â•â•â• */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 56px;
+            background: rgba(15, 15, 26, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .topbar-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--accent-gradient);
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .topbar-title {
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .topbar-file {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topbar-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(124, 92, 252, 0.15);
+            color: var(--accent-indigo);
+        }
+
+        /* â•â•â• BUTTONS â•â•â• */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-glass);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            border-color: var(--border-focus);
+            background: rgba(124, 92, 252, 0.12);
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .btn-danger {
+            color: var(--color-check);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.12);
+        }
+
+        /* â•â•â• LAYOUT â•â•â• */
+        .app-layout {
+            display: flex;
+            margin-top: 56px;
+            height: calc(100vh - 56px);
+        }
+
+        /* â•â•â• MAIN CONTENT â•â•â• */
+        .main-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px 48px 80px;
+            scroll-behavior: smooth;
+        }
+
+        .main-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .main-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .main-panel::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        /* â•â•â• SIDEBAR â•â•â• */
+        .sidebar {
+            width: 380px;
+            min-width: 380px;
+            border-left: 1px solid var(--border);
+            background: rgba(15, 15, 26, 0.6);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: width .3s;
+        }
+
+        .sidebar-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-header h3 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all .2s;
+        }
+
+        .sidebar-tab.active {
+            color: var(--accent-indigo);
+            border-bottom-color: var(--accent-indigo);
+        }
+
+        .sidebar-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .sidebar-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-content::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        /* â•â•â• LANDING / DROP ZONE â•â•â• */
+        .landing {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .drop-zone {
+            width: 520px;
+            padding: 60px 40px;
+            text-align: center;
+            border: 2px dashed var(--border);
+            border-radius: 20px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            transition: all .3s;
+        }
+
+        .drop-zone.dragover {
+            border-color: var(--accent-indigo);
+            background: rgba(124, 92, 252, 0.08);
+        }
+
+        .drop-zone-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .drop-zone h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .drop-zone p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .drop-zone input[type="file"] {
+            display: none;
+        }
+
+        /* â•â•â• RENDERED MARKDOWN â•â•â• */
+        .md-block {
+            position: relative;
+            padding: 10px 16px;
+            margin: 2px 0;
+            border-left: 3px solid transparent;
+            border-radius: 6px;
+            transition: all .2s;
+            cursor: pointer;
+        }
+
+        .md-block:hover {
+            background: rgba(124, 92, 252, 0.04);
+            border-left-color: rgba(124, 92, 252, 0.2);
+        }
+
+        .md-block.active {
+            background: rgba(124, 92, 252, 0.08);
+            border-left-color: var(--accent-indigo);
+        }
+
+        .md-block.has-comment {
+            border-left-color: var(--accent-indigo);
+        }
+
+        .md-block.has-comment.type-comment {
+            border-left-color: var(--color-comment);
+        }
+
+        .md-block.has-comment.type-todo {
+            border-left-color: var(--color-todo);
+        }
+
+        .md-block.has-comment.type-improve {
+            border-left-color: var(--color-improve);
+        }
+
+        .md-block.has-comment.type-clarify {
+            border-left-color: var(--color-clarify);
+        }
+
+        .md-block.has-comment.type-check {
+            border-left-color: var(--color-check);
+        }
+
+        .md-block.has-comment.type-restructure {
+            border-left-color: var(--color-restructure);
+        }
+
+        .comment-indicator {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+            animation: popIn .3s ease;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .comment-indicator.type-comment {
+            background: var(--color-comment);
+        }
+
+        .comment-indicator.type-todo {
+            background: var(--color-todo);
+        }
+
+        .comment-indicator.type-improve {
+            background: var(--color-improve);
+        }
+
+        .comment-indicator.type-clarify {
+            background: var(--color-clarify);
+        }
+
+        .comment-indicator.type-check {
+            background: var(--color-check);
+        }
+
+        .comment-indicator.type-restructure {
+            background: var(--color-restructure);
+        }
+
+        /* Markdown typography */
+        .md-block h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 16px 0 8px;
+            letter-spacing: -0.03em;
+            color: #fff;
+        }
+
+        .md-block h2 {
+            font-size: 21px;
+            font-weight: 600;
+            margin: 14px 0 6px;
+            letter-spacing: -0.02em;
+            color: #f0f0ff;
+        }
+
+        .md-block h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin: 12px 0 4px;
+            color: #e0e0f5;
+        }
+
+        .md-block h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 10px 0 4px;
+            color: #d0d0ea;
+        }
+
+        .md-block p {
+            font-size: 14px;
+            line-height: 1.75;
+            color: var(--text-secondary);
+        }
+
+        .md-block ul,
+        .md-block ol {
+            padding-left: 24px;
+            font-size: 14px;
+            line-height: 1.75;
+            color: var(--text-secondary);
+        }
+
+        .md-block li {
+            margin: 2px 0;
+        }
+
+        .md-block blockquote {
+            border-left: 3px solid var(--accent-indigo);
+            padding-left: 16px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .md-block strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .md-block em {
+            color: var(--text-secondary);
+        }
+
+        .md-block table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0;
+            font-size: 13px;
+        }
+
+        .md-block th {
+            background: rgba(124, 92, 252, 0.1);
+            text-align: left;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .md-block td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .md-block tr:hover td {
+            background: rgba(124, 92, 252, 0.04);
+        }
+
+        /* â•â•â• COMMENT INPUT PANEL â•â•â• */
+        .comment-input-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 380px;
+            background: rgba(20, 20, 40, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            padding: 16px 48px;
+            transform: translateY(100%);
+            transition: transform .3s ease;
+            z-index: 50;
+        }
+
+        .comment-input-panel.visible {
+            transform: translateY(0);
+        }
+
+        .comment-input-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .comment-input-header h4 {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .comment-input-body {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .comment-type-selector {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .type-chip {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all .2s;
+            opacity: 0.5;
+        }
+
+        .type-chip.selected {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .type-chip:hover {
+            opacity: 0.8;
+        }
+
+        .type-chip[data-type="comment"] {
+            background: rgba(100, 116, 139, 0.2);
+            color: var(--color-comment);
+            border-color: var(--color-comment);
+        }
+
+        .type-chip[data-type="todo"] {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--color-todo);
+            border-color: var(--color-todo);
+        }
+
+        .type-chip[data-type="improve"] {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--color-improve);
+            border-color: var(--color-improve);
+        }
+
+        .type-chip[data-type="clarify"] {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--color-clarify);
+            border-color: var(--color-clarify);
+        }
+
+        .type-chip[data-type="check"] {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--color-check);
+            border-color: var(--color-check);
+        }
+
+        .type-chip[data-type="restructure"] {
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--color-restructure);
+            border-color: var(--color-restructure);
+        }
+
+        .comment-textarea {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 50px;
+            max-height: 120px;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        .comment-textarea:focus {
+            border-color: var(--accent-indigo);
+        }
+
+        .comment-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+            align-self: flex-end;
+        }
+
+        /* â•â•â• SIDEBAR COMMENT CARDS â•â•â• */
+        .comment-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all .2s;
+            position: relative;
+        }
+
+        .comment-card:hover {
+            border-color: var(--border-focus);
+            transform: translateY(-1px);
+        }
+
+        .comment-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .comment-card-type {
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .comment-card-type.type-comment {
+            background: rgba(100, 116, 139, 0.2);
+            color: var(--color-comment);
+        }
+
+        .comment-card-type.type-todo {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--color-todo);
+        }
+
+        .comment-card-type.type-improve {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--color-improve);
+        }
+
+        .comment-card-type.type-clarify {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--color-clarify);
+        }
+
+        .comment-card-type.type-check {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--color-check);
+        }
+
+        .comment-card-type.type-restructure {
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--color-restructure);
+        }
+
+        .comment-card-section {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        .comment-card-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .comment-card-preview {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            padding: 6px 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .comment-card-actions {
+            display: flex;
+            gap: 4px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            opacity: 0;
+            transition: opacity .2s;
+        }
+
+        .comment-card:hover .comment-card-actions {
+            opacity: 1;
+        }
+
+        .card-action-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: none;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            font-size: 12px;
+            transition: all .15s;
+        }
+
+        .card-action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .card-action-btn.delete:hover {
+            color: var(--color-check);
+            background: rgba(239, 68, 68, 0.12);
+        }
+
+        /* â•â•â• FILTER BAR â•â•â• */
+        .filter-bar {
+            display: flex;
+            gap: 4px;
+            padding: 10px 20px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filter-chip {
+            padding: 3px 10px;
+            border-radius: 14px;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all .15s;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            opacity: 0.45;
+        }
+
+        .filter-chip.active {
+            opacity: 1;
+        }
+
+        .filter-chip:hover {
+            opacity: 0.7;
+        }
+
+        .filter-chip[data-filter="all"] {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            border-color: var(--border);
+        }
+
+        .filter-chip[data-filter="comment"] {
+            background: rgba(100, 116, 139, 0.15);
+            color: var(--color-comment);
+            border-color: var(--color-comment);
+        }
+
+        .filter-chip[data-filter="todo"] {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--color-todo);
+            border-color: var(--color-todo);
+        }
+
+        .filter-chip[data-filter="improve"] {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--color-improve);
+            border-color: var(--color-improve);
+        }
+
+        .filter-chip[data-filter="clarify"] {
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--color-clarify);
+            border-color: var(--color-clarify);
+        }
+
+        .filter-chip[data-filter="check"] {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--color-check);
+            border-color: var(--color-check);
+        }
+
+        .filter-chip[data-filter="restructure"] {
+            background: rgba(168, 85, 247, 0.12);
+            color: var(--color-restructure);
+            border-color: var(--color-restructure);
+        }
+
+        /* â•â•â• STATS FOOTER â•â•â• */
+        .sidebar-footer {
+            padding: 12px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stats {
+            display: flex;
+            gap: 10px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .stat-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        /* â•â•â• EMPTY STATE â•â•â• */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 13px;
+        }
+
+        /* â•â•â• TOAST â•â•â• */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            background: var(--accent-indigo);
+            color: #fff;
+            z-index: 200;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: transform .4s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* â•â•â• SECTION PREVIEW TOOLTIP â•â•â• */
+        .section-label {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.03);
+            margin-bottom: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.03em;
+        }
+
+        /* â•â•â• SECTION GUIDE â•â•â• */
+        .section-guide-banner {
+            display: none;
+            margin: 0 0 4px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.6;
+            border-left: 3px solid;
+            animation: guideFadeIn .35s ease;
+        }
+
+        .section-guide-banner.visible {
+            display: block;
+        }
+
+        @keyframes guideFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .guide-title {
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .guide-purpose {
+            color: var(--text-secondary);
+        }
+
+        .guide-checklist {
+            margin-top: 6px;
+            padding-left: 16px;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .guide-checklist li {
+            margin: 2px 0;
+        }
+
+        /* Guide color palette per section type */
+        .guide-abstract {
+            background: rgba(59, 130, 246, 0.08);
+            border-color: #3b82f6;
+        }
+
+        .guide-abstract .guide-title {
+            color: #3b82f6;
+        }
+
+        .guide-intro {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: #10b981;
+        }
+
+        .guide-intro .guide-title {
+            color: #10b981;
+        }
+
+        .guide-background {
+            background: rgba(168, 85, 247, 0.08);
+            border-color: #a855f7;
+        }
+
+        .guide-background .guide-title {
+            color: #a855f7;
+        }
+
+        .guide-related {
+            background: rgba(236, 72, 153, 0.08);
+            border-color: #ec4899;
+        }
+
+        .guide-related .guide-title {
+            color: #ec4899;
+        }
+
+        .guide-requirements {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: #f59e0b;
+        }
+
+        .guide-requirements .guide-title {
+            color: #f59e0b;
+        }
+
+        .guide-methodology {
+            background: rgba(6, 182, 212, 0.08);
+            border-color: #06b6d4;
+        }
+
+        .guide-methodology .guide-title {
+            color: #06b6d4;
+        }
+
+        .guide-evaluation {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: #ef4444;
+        }
+
+        .guide-evaluation .guide-title {
+            color: #ef4444;
+        }
+
+        .guide-conclusion {
+            background: rgba(124, 92, 252, 0.08);
+            border-color: #7c5cfc;
+        }
+
+        .guide-conclusion .guide-title {
+            color: #7c5cfc;
+        }
+
+        .guide-future {
+            background: rgba(34, 211, 238, 0.08);
+            border-color: #22d3ee;
+        }
+
+        .guide-future .guide-title {
+            color: #22d3ee;
+        }
+
+        .guide-foreword {
+            background: rgba(148, 163, 184, 0.08);
+            border-color: #94a3b8;
+        }
+
+        .guide-foreword .guide-title {
+            color: #94a3b8;
+        }
+
+        .guide-subsection {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: var(--border);
+        }
+
+        .guide-subsection .guide-title {
+            color: var(--text-muted);
+        }
+
+        .guide-appendix {
+            background: rgba(148, 163, 184, 0.05);
+            border-color: #64748b;
+        }
+
+        .guide-appendix .guide-title {
+            color: #64748b;
+        }
+
+        .btn-guide {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-guide.active {
+            background: rgba(124, 92, 252, 0.18);
+            border-color: var(--accent-indigo);
+            color: var(--accent-indigo);
+        }
+
+        /* â•â•â• RESPONSIVE â•â•â• */
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 300px;
+                min-width: 300px;
+            }
+
+            .main-panel {
+                padding: 20px 24px 80px;
+            }
+
+            .comment-input-panel {
+                right: 300px;
+                padding: 14px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <div class="topbar-left">
+            <div class="topbar-logo">MR</div>
+            <div>
+                <div class="topbar-title">Markdown Review Tool</div>
+                <div class="topbar-file" id="filename">No file loaded</div>
+            </div>
+        </div>
+        <div class="topbar-right">
+            <span class="topbar-badge" id="commentCount">0 comments</span>
+            <button class="btn btn-guide" id="btnGuide"
+                title="Toggle Section Guide â€” shows what each section should contain">ðŸ“ Section Guide</button>
+            <button class="btn" id="btnImport" title="Import annotated .md">ðŸ“‚ Import</button>
+            <button class="btn-primary btn" id="btnExport" title="Export annotated .md">â¬‡ Export</button>
+        </div>
+    </div>
+
+    <div class="app-layout">
+        <!-- MAIN PANEL -->
+        <div class="main-panel" id="mainPanel">
+            <div class="landing" id="landing">
+                <div class="drop-zone" id="dropZone">
+                    <div class="drop-zone-icon">ðŸ“„</div>
+                    <h2>Load Your Markdown</h2>
+                    <p>Drag & drop your <strong>.md</strong> file here, or click to browse</p>
+                    <button class="btn-primary btn" id="btnBrowse">Browse Files</button>
+                    <input type="file" id="fileInput" accept=".md,.txt,.markdown">
+                </div>
+            </div>
+            <div id="renderedContent" style="display:none;"></div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>ðŸ’¬ Review Comments</h3>
+                <button class="btn btn-sm" id="btnClearAll">Clear All</button>
+            </div>
+            <div class="filter-bar" id="filterBar">
+                <span class="filter-chip active" data-filter="all">All</span>
+                <span class="filter-chip" data-filter="comment">Comment</span>
+                <span class="filter-chip" data-filter="todo">Todo</span>
+                <span class="filter-chip" data-filter="improve">Improve</span>
+                <span class="filter-chip" data-filter="clarify">Clarify</span>
+                <span class="filter-chip" data-filter="check">Check</span>
+                <span class="filter-chip" data-filter="restructure">Restructure</span>
+            </div>
+            <div class="sidebar-content" id="commentsList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">ðŸ’­</div>
+                    <p>Click on any section in your document to add a review comment</p>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <div class="stats" id="statsBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMMENT INPUT PANEL (slides up from bottom) -->
+    <div class="comment-input-panel" id="commentPanel">
+        <div class="comment-input-header">
+            <h4>ðŸ“ Add Comment to: <span id="sectionRef" style="color:var(--accent-indigo)"></span></h4>
+            <button class="btn btn-sm" id="btnCancelComment">âœ• Cancel</button>
+        </div>
+        <div class="comment-type-selector" id="typeSelector">
+            <span class="type-chip selected" data-type="comment">ðŸ’¬ Comment</span>
+            <span class="type-chip" data-type="todo">ðŸ“‹ Todo</span>
+            <span class="type-chip" data-type="improve">âœ¨ Improve</span>
+            <span class="type-chip" data-type="clarify">â“ Clarify</span>
+            <span class="type-chip" data-type="check">ðŸ” Check</span>
+            <span class="type-chip" data-type="restructure">ðŸ”€ Restructure</span>
+        </div>
+        <div class="comment-input-body">
+            <textarea class="comment-textarea" id="commentText"
+                placeholder="Type your review comment here... (Ctrl+Enter to submit)"></textarea>
+            <div class="comment-actions">
+                <button class="btn-primary btn" id="btnSubmitComment">Add Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <!-- HIDDEN FILE INPUT FOR IMPORT -->
+    <input type="file" id="importInput" accept=".md,.txt,.markdown" style="display:none;">
+
+    <script>
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // STATE
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        let rawMarkdown = '';
+        let blocks = [];          // { id, startLine, endLine, rawText, html }
+        let comments = [];        // { id, blockId, type, text, sectionPreview }
+        let activeBlockId = null;
+        let selectedType = 'comment';
+        let activeFilter = 'all';
+        let editingCommentId = null;
+        let guideVisible = false;
+
+        const COMMENT_TYPES = {
+            comment: { label: 'COMMENT', emoji: 'ðŸ’¬', color: 'var(--color-comment)', tag: 'COMMENT' },
+            todo: { label: 'TODO', emoji: 'ðŸ“‹', color: 'var(--color-todo)', tag: 'TODO' },
+            improve: { label: 'IMPROVE', emoji: 'âœ¨', color: 'var(--color-improve)', tag: 'IMPROVE' },
+            clarify: { label: 'CLARIFY', emoji: 'â“', color: 'var(--color-clarify)', tag: 'CLARIFY' },
+            check: { label: 'CHECK', emoji: 'ðŸ”', color: 'var(--color-check)', tag: 'CHECK' },
+            restructure: { label: 'RESTRUCTURE', emoji: 'ðŸ”€', color: 'var(--color-restructure)', tag: 'RESTRUCTURE' },
+        };
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // DOM REFS
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        const $ = id => document.getElementById(id);
+        const mainPanel = $('mainPanel');
+        const landing = $('landing');
+        const rendered = $('renderedContent');
+        const dropZone = $('dropZone');
+        const fileInput = $('fileInput');
+        const importInput = $('importInput');
+        const commentPanel = $('commentPanel');
+        const commentText = $('commentText');
+        const commentsList = $('commentsList');
+        const sectionRef = $('sectionRef');
+        const filenameEl = $('filename');
+        const commentCountEl = $('commentCount');
+        const statsBar = $('statsBar');
+        const toast = $('toast');
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // FILE LOADING
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        $('btnBrowse').addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', e => loadFile(e.target.files[0]));
+        $('btnImport').addEventListener('click', () => importInput.click());
+        importInput.addEventListener('change', e => loadFile(e.target.files[0]));
+
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+
+        function loadFile(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                rawMarkdown = e.target.result;
+                filenameEl.textContent = file.name;
+                // Extract existing comments from imported file
+                const { cleanMd, extractedComments } = extractEmbeddedComments(rawMarkdown);
+                rawMarkdown = cleanMd;
+                parseAndRender(rawMarkdown);
+                // Restore extracted comments
+                if (extractedComments.length > 0) {
+                    extractedComments.forEach(c => {
+                        const matchBlock = blocks.find(b => b.startLine === c.beforeLine) || blocks.find(b => Math.abs(b.startLine - c.beforeLine) <= 2);
+                        if (matchBlock) {
+                            comments.push({
+                                id: Date.now() + Math.random(),
+                                blockId: matchBlock.id,
+                                type: c.type,
+                                text: c.text,
+                                sectionPreview: truncate(matchBlock.rawText, 60)
+                            });
+                        }
+                    });
+                    refreshUI();
+                    showToast(`Imported ${extractedComments.length} comment(s) from file`);
+                }
+                landing.style.display = 'none';
+                rendered.style.display = 'block';
+            };
+            reader.readAsText(file);
+        }
+
+        function extractEmbeddedComments(md) {
+            const lines = md.split('\n');
+            const extracted = [];
+            const cleanLines = [];
+            const tagRegex = /^< !--\s*\[(COMMEN T |TOD O |IMPROV E |CLARIF Y |CHEC K |RESTRUCTURE) :\ s *(.*? )\]\ s*- ->$/;
+            for (let i = 0; i < lines.length; i++) {
+                const match = lines[i].trim().match(tagRegex);
+                if (match) {
+                    extracted.push({ type: match[1].toLowerCase(), text: match[2].trim(), beforeLine: cleanLines.length + 1 });
+                } else {
+                    cleanLines.push(lines[i]);
+                }
+            }
+            return { cleanMd: cleanLines.join('\n'), extractedComments: extracted };
+        }
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // MARKDOWN PARSER â€” splits into blocks and renders
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        function parseAndRender(md) {
+            blocks = [];
+            const lines = md.split('\n');
+            let currentBlock = null;
+            let blockId = 0;
+
+            function pushBlock() {
+                if (currentBlock && currentBlock.rawText.trim()) {
+                    currentBlock.endLine = currentBlock._lastLine;
+                    currentBlock.html = renderBlock(currentBlock.rawText, currentBlock.blockType);
+                    blocks.push(currentBlock);
+                }
+            }
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const lineNum = i + 1;
+
+                // Detect block type
+                if (/^#{1,4}\s/.test(line)) {
+                    pushBlock();
+                    currentBlock = { id: blockId++, startLine: lineNum, _lastLine: lineNum, rawText: line, blockType: 'heading' };
+                    pushBlock(); currentBlock = null;
+                } else if (/^\|/.test(line) && (!currentBlock || currentBlock.blockType === 'table')) {
+                    if (!currentBlock || currentBlock.blockType !== 'table') {
+                        pushBlock();
+                        currentBlock = { id: blockId++, startLine: lineNum, _lastLine: lineNum, rawText: line, blockType: 'table' };
+                    } else {
+                        currentBlock.rawText += '\n' + line;
+                        currentBlock._lastLine = lineNum;
+                    }
+                } else if (/^>\s?/.test(line)) {
+                    pushBlock();
+                    currentBlock = { id: blockId++, startLine: lineNum, _lastLine: lineNum, rawText: line, blockType: 'blockquote' };
+                    pushBlock(); currentBlock = null;
+                } else if (/^(\*\*Table \d|>\s*\*\*Figure)/.test(line)) {
+                    pushBlock();
+                    currentBlock = { id: blockId++, startLine: lineNum, _lastLine: lineNum, rawText: line, blockType: 'caption' };
+                    pushBlock(); currentBlock = null;
+                } else if (/^[â€¢\-\*]\s/.test(line) || /^\d+[.)]\s/.test(line)) {
+                    if (!currentBlock || currentBlock.blockType !== 'list') {
+                        pushBlock();
+                        currentBlock = { id: blockId++, startLine: lineNum, _lastLine: lineNum, rawText: line, blockType: 'list' };
+                    } else {
+                        currentBlock.rawText += '\n' + line;
+                        currentBlock._lastLine = lineNum;
+                    }
+                } else if (line.trim() === '') {
+                    pushBlock(); currentBlock = null;
+                } else {
+                    // Paragraph continuation
+                    if (!currentBlock || currentBlock.blockType !== 'paragraph') {
+                        pushBlock();
+                        currentBlock = { id: blockId++, startLine: lineNum, _lastLine: lineNum, rawText: line, blockType: 'paragraph' };
+                    } else {
+                        currentBlock.rawText += '\n' + line;
+                        currentBlock._lastLine = lineNum;
+                    }
+                }
+            }
+            pushBlock();
+
+            renderAll();
+        }
+
+        function renderBlock(raw, type) {
+            // Inline formatting
+            let text = escapeHtml(raw);
+            text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            text = text.replace(/`(.+?)`/g, '<code style="background:rgba(124,92,252,0.1);padding:1px 5px;border-radius:3px;font-family:JetBrains Mono,monospace;font-size:12px;">$1</code>');
+
+            switch (type) {
+                case 'heading': {
+                    const m = raw.match(/^(#{1,4})\s+(.*)/);
+                    const level = m[1].length;
+                    const title = m[2].replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                    return `<h${level}>${escapeHtml(title).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</h${level}>`;
+                }
+                case 'table': {
+                    const rows = raw.split('\n').filter(r => r.trim());
+                    if (rows.length < 2) return `<p>${text}</p>`;
+                    let html = '<table>';
+                    rows.forEach((row, idx) => {
+                        if (/^[\|\s\-:]+$/.test(row)) return; // separator
+                        const cells = row.split('|').map(c => c.trim()).filter(c => c);
+                        html += '<tr>';
+                        cells.forEach(c => {
+                            const tag = idx === 0 ? 'th' : 'td';
+                            html += `<${tag}>${escapeHtml(c).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</${tag}>`;
+                        });
+                        html += '</tr>';
+                    });
+                    html += '</table>';
+                    return html;
+                }
+                case 'blockquote':
+                    return `<blockquote>${text.replace(/^&gt;\s?/gm, '')}</blockquote>`;
+                case 'list': {
+                    const items = raw.split('\n');
+                    const isOrdered = /^\d+[.)]\s/.test(items[0]);
+                    const tag = isOrdered ? 'ol' : 'ul';
+                    let html = `<${tag}>`;
+                    items.forEach(item => {
+                        const content = item.replace(/^[â€¢\-\*]\s+|^\d+[.)]\s+/, '');
+                        html += `<li>${escapeHtml(content).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>')}</li>`;
+                    });
+                    html += `</${tag}>`;
+                    return html;
+                }
+                case 'caption':
+                    return `<p>${text}</p>`;
+                default:
+                    return `<p>${text}</p>`;
+            }
+        }
+
+        function escapeHtml(s) {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function renderAll() {
+            rendered.innerHTML = '';
+            blocks.forEach(block => {
+                const div = document.createElement('div');
+                div.className = 'md-block';
+                div.dataset.blockId = block.id;
+                div.innerHTML = `<span class="section-label">Line ${block.startLine}${block.endLine && block.endLine !== block.startLine ? 'â€“' + block.endLine : ''}</span>${block.html}`;
+                // Inject section guide banner for heading blocks
+                if (block.blockType === 'heading') {
+                    const guide = getSectionGuide(block.rawText);
+                    if (guide) {
+                        const banner = document.createElement('div');
+                        banner.className = `section-guide-banner guide-${guide.style}${guideVisible ? ' visible' : ''}`;
+                        banner.innerHTML = `<div class="guide-title">${guide.icon} ${guide.title}</div><div class="guide-purpose">${guide.purpose}</div>${guide.checklist ? '<ul class="guide-checklist">' + guide.checklist.map(i => '<li>' + i + '</li>').join('') + '</ul>' : ''}`;
+                        div.appendChild(banner);
+                    }
+                }
+                div.addEventListener('click', () => selectBlock(block.id));
+                rendered.appendChild(div);
+            });
+            refreshUI();
+        }
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // BLOCK SELECTION & COMMENTING
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        function selectBlock(blockId) {
+            activeBlockId = blockId;
+            editingCommentId = null;
+            const block = blocks.find(b => b.id === blockId);
+            // Highlight
+            document.querySelectorAll('.md-block').forEach(el => el.classList.remove('active'));
+            const el = document.querySelector(`.md-block[data-block-id="${blockId}"]`);
+            if (el) el.classList.add('active');
+            // Show panel
+            sectionRef.textContent = `Line ${block.startLine} â€” ${truncate(block.rawText, 50)}`;
+            commentPanel.classList.add('visible');
+            commentText.value = '';
+            commentText.focus();
+            // Reset type to comment
+            setType('comment');
+        }
+
+        function setType(type) {
+            selectedType = type;
+            document.querySelectorAll('.type-chip').forEach(c => c.classList.toggle('selected', c.dataset.type === type));
+        }
+
+        // Type chips
+        document.querySelectorAll('#typeSelector .type-chip').forEach(chip => {
+            chip.addEventListener('click', () => setType(chip.dataset.type));
+        });
+
+        // Submit
+        $('btnSubmitComment').addEventListener('click', submitComment);
+        $('btnCancelComment').addEventListener('click', () => {
+            commentPanel.classList.remove('visible');
+            activeBlockId = null; editingCommentId = null;
+            document.querySelectorAll('.md-block').forEach(el => el.classList.remove('active'));
+        });
+
+        commentText.addEventListener('keydown', e => {
+            if (e.ctrlKey && e.key === 'Enter') submitComment();
+        });
+
+        function submitComment() {
+            const text = commentText.value.trim();
+            if (!text || activeBlockId === null) return;
+            const block = blocks.find(b => b.id === activeBlockId);
+
+            if (editingCommentId) {
+                const c = comments.find(c => c.id === editingCommentId);
+                if (c) { c.type = selectedType; c.text = text; }
+                editingCommentId = null;
+            } else {
+                comments.push({
+                    id: Date.now() + Math.random(),
+                    blockId: activeBlockId,
+                    type: selectedType,
+                    text: text,
+                    sectionPreview: truncate(block.rawText, 60)
+                });
+            }
+
+            commentPanel.classList.remove('visible');
+            activeBlockId = null;
+            commentText.value = '';
+            document.querySelectorAll('.md-block').forEach(el => el.classList.remove('active'));
+            refreshUI();
+            showToast('Comment added âœ“');
+        }
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // REFRESH UI
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        function refreshUI() {
+            // Update block indicators
+            document.querySelectorAll('.md-block').forEach(el => {
+                const bid = parseInt(el.dataset.blockId);
+                const blockComments = comments.filter(c => c.blockId === bid);
+                el.classList.remove('has-comment', 'type-comment', 'type-todo', 'type-improve', 'type-clarify', 'type-check', 'type-restructure');
+                el.querySelectorAll('.comment-indicator').forEach(i => i.remove());
+                if (blockComments.length > 0) {
+                    const last = blockComments[blockComments.length - 1];
+                    el.classList.add('has-comment', `type-${last.type}`);
+                    const ind = document.createElement('span');
+                    ind.className = `comment-indicator type-${last.type}`;
+                    ind.textContent = blockComments.length;
+                    ind.title = `${blockComments.length} comment(s)`;
+                    el.appendChild(ind);
+                }
+            });
+
+            // Sidebar
+            const filtered = activeFilter === 'all' ? comments : comments.filter(c => c.type === activeFilter);
+            if (filtered.length === 0) {
+                commentsList.innerHTML = `<div class="empty-state"><div class="empty-state-icon">ðŸ’­</div><p>${comments.length === 0 ? 'Click on any section to add a review comment' : 'No comments match this filter'}</p></div>`;
+            } else {
+                commentsList.innerHTML = '';
+                filtered.forEach(c => {
+                    const card = document.createElement('div');
+                    card.className = 'comment-card';
+                    card.innerHTML = `
+        <div class="comment-card-header">
+          <span class="comment-card-type type-${c.type}">${COMMENT_TYPES[c.type].emoji} ${COMMENT_TYPES[c.type].label}</span>
+          <span class="comment-card-section">L${blocks.find(b => b.id === c.blockId)?.startLine || '?'}</span>
+        </div>
+        <div class="comment-card-text">${escapeHtml(c.text)}</div>
+        <div class="comment-card-preview">${escapeHtml(c.sectionPreview)}</div>
+        <div class="comment-card-actions">
+          <button class="card-action-btn edit" title="Edit">âœ</button>
+          <button class="card-action-btn delete" title="Delete">ðŸ—‘</button>
+        </div>
+      `;
+                    card.addEventListener('click', e => {
+                        if (e.target.closest('.card-action-btn')) return;
+                        scrollToBlock(c.blockId);
+                    });
+                    card.querySelector('.edit').addEventListener('click', () => editComment(c.id));
+                    card.querySelector('.delete').addEventListener('click', () => deleteComment(c.id));
+                    commentsList.appendChild(card);
+                });
+            }
+
+            // Badge
+            commentCountEl.textContent = `${comments.length} comment${comments.length !== 1 ? 's' : ''}`;
+
+            // Stats
+            const typeCounts = {};
+            comments.forEach(c => { typeCounts[c.type] = (typeCounts[c.type] || 0) + 1; });
+            statsBar.innerHTML = '';
+            Object.entries(typeCounts).forEach(([type, count]) => {
+                const stat = document.createElement('div');
+                stat.className = 'stat';
+                stat.innerHTML = `<span class="stat-dot" style="background:${COMMENT_TYPES[type].color}"></span>${count} ${COMMENT_TYPES[type].label.toLowerCase()}`;
+                statsBar.appendChild(stat);
+            });
+        }
+
+        function scrollToBlock(blockId) {
+            const el = document.querySelector(`.md-block[data-block-id="${blockId}"]`);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('active');
+                setTimeout(() => el.classList.remove('active'), 2000);
+            }
+        }
+
+        function editComment(commentId) {
+            const c = comments.find(c => c.id === commentId);
+            if (!c) return;
+            activeBlockId = c.blockId;
+            editingCommentId = commentId;
+            const block = blocks.find(b => b.id === c.blockId);
+            sectionRef.textContent = `Line ${block.startLine} â€” ${truncate(block.rawText, 50)}`;
+            commentText.value = c.text;
+            setType(c.type);
+            commentPanel.classList.add('visible');
+            commentText.focus();
+        }
+
+        function deleteComment(commentId) {
+            comments = comments.filter(c => c.id !== commentId);
+            refreshUI();
+            showToast('Comment deleted');
+        }
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // FILTER
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                activeFilter = chip.dataset.filter;
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c === chip));
+                refreshUI();
+            });
+        });
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // CLEAR ALL
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        $('btnClearAll').addEventListener('click', () => {
+            if (comments.length === 0) return;
+            if (confirm('Remove all comments?')) {
+                comments = [];
+                refreshUI();
+                showToast('All comments cleared');
+            }
+        });
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // EXPORT
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        $('btnExport').addEventListener('click', exportAnnotated);
+
+        function exportAnnotated() {
+            if (!rawMarkdown || comments.length === 0) {
+                showToast('Nothing to export');
+                return;
+            }
+
+            const lines = rawMarkdown.split('\n');
+            // Group comments by their block's startLine
+            const insertions = {};
+            comments.forEach(c => {
+                const block = blocks.find(b => b.id === c.blockId);
+                if (!block) return;
+                const key = block.startLine;
+                if (!insertions[key]) insertions[key] = [];
+                insertions[key].push(c);
+            });
+
+            // Build output
+            const output = [];
+            for (let i = 0; i < lines.length; i++) {
+                const lineNum = i + 1;
+                if (insertions[lineNum]) {
+                    insertions[lineNum].forEach(c => {
+                        output.push(`<!-- [${COMMENT_TYPES[c.type].tag}: ${c.text}] -->`);
+                    });
+                }
+                output.push(lines[i]);
+            }
+
+            const baseName = filenameEl.textContent.replace(/\.md$/, '') || 'thesis';
+            const fileName = `${baseName}_annotated.md`;
+            const content = output.join('\n');
+
+            // Strategy 1: Use File System Access API (Chrome 86+) â€” gives a real Save As dialog
+            if (window.showSaveFilePicker) {
+                (async () => {
+                    try {
+                        const handle = await window.showSaveFilePicker({
+                            suggestedName: fileName,
+                            types: [{
+                                description: 'Markdown file',
+                                accept: { 'text/markdown': ['.md'] },
+                            }],
+                        });
+                        const writable = await handle.createWritable();
+                        await writable.write(content);
+                        await writable.close();
+                        showToast(`Saved "${fileName}" with ${comments.length} comment(s) âœ“`);
+                    } catch (err) {
+                        // User cancelled the save dialog
+                        if (err.name !== 'AbortError') {
+                            console.error('Save failed:', err);
+                            fallbackExport(content, fileName);
+                        }
+                    }
+                })();
+            } else {
+                fallbackExport(content, fileName);
+            }
+        }
+
+        function fallbackExport(content, fileName) {
+            // Strategy 2: data: URI download (works in most cases)
+            try {
+                const dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(content);
+                const a = document.createElement('a');
+                a.href = dataUri;
+                a.download = fileName;
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => document.body.removeChild(a), 200);
+                showToast(`Exported "${fileName}" with ${comments.length} comment(s) âœ“`);
+            } catch (err) {
+                // Strategy 3: Open in new tab for manual save
+                const win = window.open('', '_blank');
+                win.document.write('<pre>' + content.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>');
+                win.document.title = fileName;
+                showToast('Opened in new tab â€” use Ctrl+S to save');
+            }
+        }
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // UTILITIES
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        function truncate(str, max) {
+            const clean = str.replace(/\n/g, ' ').replace(/#+\s*/, '').trim();
+            return clean.length > max ? clean.slice(0, max) + 'â€¦' : clean;
+        }
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // SECTION GUIDE â€” maps headings to their purpose
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        const SECTION_GUIDES = [
+            {
+                match: /abstract/i, style: 'abstract', icon: 'ðŸ“˜', title: 'Abstract',
+                purpose: 'Concisely summarize the entire thesis: problem, method, key results, and contribution.',
+                checklist: ['State the problem and motivation', 'Describe methodology in 1â€“2 sentences', 'Highlight key findings/results', 'State the main contribution', 'Keep under 300 words']
+            },
+            {
+                match: /foreword/i, style: 'foreword', icon: 'âœï¸', title: 'Foreword',
+                purpose: 'Personal narrative on your motivation and the journey that led to this research.',
+                checklist: ['Share personal motivation', 'Connect to broader industry challenge', 'Set the reader\'s expectation']
+            },
+            {
+                match: /\b1\.?\s*(introduction|intro)\b|^#\s*1\./i, style: 'intro', icon: 'ðŸš€', title: 'Introduction',
+                purpose: 'Introduce the domain, state the problem, define research questions, and outline thesis structure.',
+                checklist: ['Establish context and motivation', 'Define the problem statement clearly', 'State research questions (RQs)', 'Summarize research objectives', 'Outline thesis structure (chapter overview)']
+            },
+            {
+                match: /context|motivation/i, style: 'intro', icon: 'ðŸŽ¯', title: 'Context & Motivation',
+                purpose: 'Establish why this research matters â€” the real-world problem and industry need.',
+                checklist: ['Describe the cybersecurity landscape challenge', 'Identify the gap in current tools', 'Connect to organizational impact']
+            },
+            {
+                match: /problem\s*statement/i, style: 'intro', icon: 'âš ï¸', title: 'Problem Statement',
+                purpose: 'Precisely define the technical and operational problem this thesis solves.',
+                checklist: ['Be specific about what is broken/missing', 'Explain consequences of the problem', 'Set scope boundaries']
+            },
+            {
+                match: /research\s*(gap|question|objective)/i, style: 'intro', icon: 'ðŸ”¬', title: 'Research Gap & Objectives',
+                purpose: 'Articulate the gap in existing solutions and what this thesis aims to achieve.',
+                checklist: ['Reference what existing work doesn\'t cover', 'List numbered research questions', 'Connect each RQ to a thesis component']
+            },
+            {
+                match: /limitation.*existing|existing.*approach/i, style: 'intro', icon: 'ðŸš§', title: 'Limitations of Existing Approaches',
+                purpose: 'Critically analyze why current solutions (CVSS, Wazuh, NIST CSF alone) fall short.',
+                checklist: ['Compare strengths and weaknesses', 'Use a structured format (table or bullets)', 'Conclude with the gap your system fills']
+            },
+            {
+                match: /structure/i, style: 'intro', icon: 'ðŸ“‘', title: 'Thesis Structure',
+                purpose: 'Briefly outline what each chapter covers â€” a roadmap for the reader.',
+                checklist: ['List each chapter with 1-line summary', 'Help reader navigate the document']
+            },
+            {
+                match: /company\s*background|resistine/i, style: 'foreword', icon: 'ðŸ¢', title: 'Company Background',
+                purpose: 'Introduce the industrial partner and their relevance to the research.',
+                checklist: ['Describe the company\'s mission', 'Connect to thesis objectives', 'Note any collaboration context']
+            },
+            {
+                match: /\b2\.?\s*(background|theoretical)/i, style: 'background', icon: 'ðŸ“š', title: 'Background & Theoretical Foundations',
+                purpose: 'Establish the theoretical knowledge base the reader needs. Define key concepts used throughout.',
+                checklist: ['Define core terms (cyber risk, frameworks, LLMs)', 'Explain NIST CSF 2.0 structure', 'Cover CVSS, CVE, MITRE ATT&CK', 'Introduce Wazuh architecture', 'Summarize LLM applications in cybersecurity']
+            },
+            {
+                match: /cyber\s*risk/i, style: 'background', icon: 'ðŸ›¡ï¸', title: 'Cyber Risk Concepts',
+                purpose: 'Define cyber risk and explain how risk assessment and prioritization work.',
+                checklist: ['Define technical vs. business risk', 'Explain risk assessment process', 'Justify the need for prioritization']
+            },
+            {
+                match: /nist\s*(csf|cybersecurity\s*framework)/i, style: 'background', icon: 'ðŸ“‹', title: 'NIST CSF 2.0',
+                purpose: 'Explain the NIST CSF 2.0 framework structure â€” Functions, Categories, Subcategories.',
+                checklist: ['List all 6 Functions with descriptions', 'Explain Categories and Subcategories', 'Include the official reference table', 'Discuss Profiles and Implementation Tiers']
+            },
+            {
+                match: /vulnerability\s*scoring|cvss|cve|mitre/i, style: 'background', icon: 'ðŸ“Š', title: 'Vulnerability Scoring & Threat Intel',
+                purpose: 'Explain industry-standard scoring (CVSS, CVE, MITRE ATT&CK) and how they relate.',
+                checklist: ['Define CVSS metrics and limitations', 'Explain CVE/NVD databases', 'Describe MITRE ATT&CK structure', 'Show how they complement each other']
+            },
+            {
+                match: /wazuh/i, style: 'background', icon: 'ðŸ”', title: 'Wazuh Platform',
+                purpose: 'Describe the Wazuh SIEM architecture and the detection capabilities relevant to this thesis.',
+                checklist: ['Describe agent/manager/indexer components', 'Explain rule-based detection and SCA', 'Justify Wazuh as sole data source']
+            },
+            {
+                match: /large\s*language|llm/i, style: 'background', icon: 'ðŸ¤–', title: 'LLMs in Cybersecurity',
+                purpose: 'Summarize how LLMs are being applied in cybersecurity and what role they play in this thesis.',
+                checklist: ['List key applications (triage, threat intel, explanations)', 'Describe the approach used in this thesis', 'Address accuracy safeguards and ethical guardrails']
+            },
+            {
+                match: /\b3\.?\s*(related\s*work|state\s*of\s*(the\s*)?art)/i, style: 'related', icon: 'ðŸ”—', title: 'Related Work & State of the Art',
+                purpose: 'Review existing research, identify what\'s been done, and clearly position your document contribution.',
+                checklist: ['Organize by thematic area', 'Cite specific papers with findings', 'Compare approaches critically', 'Clearly identify the gap your work fills', 'End each subsection with your differentiation']
+            },
+            {
+                match: /risk\s*prioritization\s*beyond/i, style: 'related', icon: 'ðŸ“ˆ', title: 'Related: Risk Prioritization',
+                purpose: 'Review research on dynamic risk scoring that goes beyond static CVSS.',
+                checklist: ['Cite POLAR, EPSS, and similar frameworks', 'Explain how your VÂ·TÂ·A formula differs']
+            },
+            {
+                match: /framework\s*alignment|siem\s*integration/i, style: 'related', icon: 'ðŸ”„', title: 'Related: Framework & SIEM Integration',
+                purpose: 'Review research on aligning SIEM outputs with governance frameworks.',
+                checklist: ['Cite NIST CSF + LLM studies', 'Reference Wazuh Copilot and similar', 'Highlight your deterministic approach']
+            },
+            {
+                match: /multi.agent|rag\s*in\s*security/i, style: 'related', icon: 'ðŸ¤', title: 'Related: Multi-Agent Systems & RAG',
+                purpose: 'Review multi-agent AI systems and RAG techniques applied to SOC operations.',
+                checklist: ['Cite agentic AI taxonomies', 'Reference RAG + compliance studies', 'Explain your cyclic LangGraph approach']
+            },
+            {
+                match: /\b4\.?\s*(system\s*requirement|conceptual\s*model)/i, style: 'requirements', icon: 'ðŸ“', title: 'System Requirements & Conceptual Model',
+                purpose: 'Define what the system must do (FRs), quality attributes (NFRs), and the high-level architecture.',
+                checklist: ['Present system overview diagram (or describe it)', 'List all functional requirements (FR-01 to FR-08)', 'List non-functional requirements', 'Describe domain-specific requirements', 'Show conceptual model layers', 'Use MoSCoW prioritization']
+            },
+            {
+                match: /\b5\.?\s*(methodology|implementation)/i, style: 'methodology', icon: 'âš™ï¸', title: 'Methodology & Implementation',
+                purpose: 'Describe HOW you built the system â€” research design, phased development, technical details, and decisions.',
+                checklist: ['Explain design-science methodology', 'Describe the lab environment', 'Detail each implementation phase', 'Justify key architectural decisions', 'Include code/config references where appropriate', 'Explain RAG architecture and ingestion']
+            },
+            {
+                match: /research\s*design|lab\s*(environment|infrastructure)/i, style: 'methodology', icon: 'ðŸ§ª', title: 'Research Design & Lab Setup',
+                purpose: 'Describe research methodology and the physical/logical deployment infrastructure.',
+                checklist: ['Name methodology (design-science)', 'List all servers/nodes and their roles', 'Explain air-gapped architecture rationale']
+            },
+            {
+                match: /phase\s*(i|1|ii|2|iii|3|iv|4|v|5)/i, style: 'methodology', icon: 'ðŸ”§', title: 'Implementation Phase',
+                purpose: 'Detail the specific implementation work done in this phase.',
+                checklist: ['Describe input â†’ process â†’ output', 'Reference scripts and tools used', 'Show validation results']
+            },
+            {
+                match: /rag\s*architecture|knowledge\s*ingestion|retrieval/i, style: 'methodology', icon: 'ðŸ§ ', title: 'RAG Architecture',
+                purpose: 'Explain the Retrieval-Augmented Generation pipeline: ingestion, indexing, retrieval techniques.',
+                checklist: ['Describe LanceDB vector store setup', 'Explain parent-child indexing', 'Detail metadata pre-filtering', 'Cover query enrichment via regex']
+            },
+            {
+                match: /dashboard|visualization/i, style: 'methodology', icon: 'ðŸ“Š', title: 'Dashboard & Visualization',
+                purpose: 'Describe how CSF coverage and events are visualized in OpenSearch dashboards.',
+                checklist: ['List dashboard panels', 'Explain layout design decisions']
+            },
+            {
+                match: /observability|phoenix|explainab/i, style: 'methodology', icon: 'ðŸ”­', title: 'Observability & Explainability',
+                purpose: 'Explain how the system\'s reasoning is traced, logged, and made transparent.',
+                checklist: ['Describe Arize Phoenix integration', 'Explain waterfall trace visualization', 'Connect to RQ4']
+            },
+            {
+                match: /\b6\.?\s*(evaluation|results)/i, style: 'evaluation', icon: 'ðŸ“Š', title: 'Evaluation & Results',
+                purpose: 'Present your evaluation methodology, experiments, and results that answer the research questions.',
+                checklist: ['Define evaluation criteria and metrics', 'Present quantitative results (tables, charts)', 'Present qualitative analysis', 'Map results back to each Research Question', 'Discuss limitations and threats to validity']
+            },
+            {
+                match: /\b7\.?\s*conclusion/i, style: 'conclusion', icon: 'ðŸ', title: 'Conclusion',
+                purpose: 'Summarize key findings, restate contributions, and reflect on the research questions.',
+                checklist: ['Restate the problem briefly', 'Summarize each key contribution', 'Confirm which RQs were answered', 'Reflect on significance and impact']
+            },
+            {
+                match: /\b8\.?\s*future\s*work/i, style: 'future', icon: 'ðŸ”®', title: 'Future Work',
+                purpose: 'Identify concrete extensions and improvements for future research.',
+                checklist: ['List 3â€“5 specific future directions', 'Connect each to a current limitation', 'Be concrete and actionable']
+            },
+            {
+                match: /appendix/i, style: 'appendix', icon: 'ðŸ“Ž', title: 'Appendix',
+                purpose: 'Supplementary material: code snippets, full tables, config files, extended data.',
+                checklist: ['Reference from main text', 'Label clearly (Appendix I, II, etc.)']
+            },
+            {
+                match: /reference|bibliography/i, style: 'appendix', icon: 'ðŸ“š', title: 'References',
+                purpose: 'Complete list of all cited works in a consistent citation format.',
+                checklist: ['Use consistent IEEE/APA format', 'Verify all in-text citations have entries', 'Include DOIs where available']
+            },
+        ];
+
+        function getSectionGuide(rawText) {
+            const cleanText = rawText.replace(/^#+\s*/, '').replace(/\d+\.\d*\s*/, '').trim();
+            for (const guide of SECTION_GUIDES) {
+                if (guide.match.test(rawText) || guide.match.test(cleanText)) {
+                    return guide;
+                }
+            }
+            // Fallback for numbered subsections (e.g., "5.3. Phase I: ...")
+            if (/^\d+\.\d+/.test(cleanText)) {
+                return {
+                    style: 'subsection', icon: 'ðŸ“„', title: 'Subsection',
+                    purpose: 'A subsection that supports the parent chapter\'s narrative. Ensure it connects to the chapter\'s main argument.',
+                    checklist: null
+                };
+            }
+            return null;
+        }
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // SECTION GUIDE TOGGLE
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        const btnGuide = document.getElementById('btnGuide');
+        btnGuide.addEventListener('click', () => {
+            guideVisible = !guideVisible;
+            btnGuide.classList.toggle('active', guideVisible);
+            document.querySelectorAll('.section-guide-banner').forEach(b => {
+                b.classList.toggle('visible', guideVisible);
+            });
+            showToast(guideVisible ? 'Section Guide ON â€” showing what each section should contain' : 'Section Guide OFF');
+        });
+    </script>
+</body>
+
+</html>
+

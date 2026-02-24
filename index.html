@@ -1190,12 +1190,13 @@
         // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         let rawMarkdown = '';
         let blocks = [];          // { id, startLine, endLine, rawText, html }
-        let comments = [];        // { id, blockId, type, text, sectionPreview }
+        let comments = [];        // { id, blockId, type, text, sectionPreview, selectedText }
         let activeBlockId = null;
         let selectedType = 'comment';
         let activeFilter = 'all';
         let editingCommentId = null;
         let guideVisible = false;
+        let pendingSelectedText = ''; // text user highlighted before clicking
 
         const COMMENT_TYPES = {
             comment: { label: 'COMMENT', emoji: 'ðŸ’¬', color: 'var(--color-comment)', tag: 'COMMENT' },
@@ -1437,15 +1438,25 @@
         // BLOCK SELECTION & COMMENTING
         // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         function selectBlock(blockId) {
+            // Capture any text the user highlighted BEFORE we change focus
+            const sel = window.getSelection();
+            const selText = sel ? sel.toString().trim() : '';
+            pendingSelectedText = selText;
+
             activeBlockId = blockId;
             editingCommentId = null;
             const block = blocks.find(b => b.id === blockId);
-            // Highlight
+            // Highlight block
             document.querySelectorAll('.md-block').forEach(el => el.classList.remove('active'));
             const el = document.querySelector(`.md-block[data-block-id="${blockId}"]`);
             if (el) el.classList.add('active');
-            // Show panel
-            sectionRef.textContent = `Line ${block.startLine} â€” ${truncate(block.rawText, 50)}`;
+            // Show panel with selection info
+            if (pendingSelectedText) {
+                const preview = pendingSelectedText.length > 60 ? pendingSelectedText.slice(0, 60) + 'â€¦' : pendingSelectedText;
+                sectionRef.innerHTML = `Line ${block.startLine} â€” <span style="color:#f59e0b;font-style:italic;">"${escapeHtml(preview)}"</span>`;
+            } else {
+                sectionRef.textContent = `Line ${block.startLine} â€” ${truncate(block.rawText, 50)}`;
+            }
             commentPanel.classList.add('visible');
             commentText.value = '';
             commentText.focus();
@@ -1490,10 +1501,14 @@
                     blockId: activeBlockId,
                     type: selectedType,
                     text: text,
-                    sectionPreview: truncate(block.rawText, 60)
+                    selectedText: pendingSelectedText || '',
+                    sectionPreview: pendingSelectedText
+                        ? '"' + truncate(pendingSelectedText, 50) + '"'
+                        : truncate(block.rawText, 60)
                 });
             }
 
+            pendingSelectedText = '';
             commentPanel.classList.remove('visible');
             activeBlockId = null;
             commentText.value = '';
@@ -1631,32 +1646,53 @@
                 return;
             }
 
-            const lines = rawMarkdown.split('\n');
-            // Group comments by their block's startLine
-            const insertions = {};
-            comments.forEach(c => {
-                const block = blocks.find(b => b.id === c.blockId);
-                if (!block) return;
-                const key = block.startLine;
-                if (!insertions[key]) insertions[key] = [];
-                insertions[key].push(c);
+            let content = rawMarkdown;
+
+            // Process inline comments (those with selectedText) â€” place tag right after the selected text
+            // Sort by selectedText length descending to avoid overlapping replacements
+            const inlineComments = comments.filter(c => c.selectedText && c.selectedText.length > 0)
+                .sort((a, b) => b.selectedText.length - a.selectedText.length);
+            const blockComments = comments.filter(c => !c.selectedText || c.selectedText.length === 0);
+
+            // Track which inline comments have been placed to avoid duplicates
+            const placed = new Set();
+            inlineComments.forEach(c => {
+                const tag = `<!-- [${COMMENT_TYPES[c.type].tag}: ${c.text}] -->`;
+                const idx = content.indexOf(c.selectedText);
+                if (idx !== -1 && !placed.has(c.id)) {
+                    // Insert the tag right after the selected text
+                    const insertAt = idx + c.selectedText.length;
+                    content = content.slice(0, insertAt) + ' ' + tag + content.slice(insertAt);
+                    placed.add(c.id);
+                }
             });
 
-            // Build output
-            const output = [];
-            for (let i = 0; i < lines.length; i++) {
-                const lineNum = i + 1;
-                if (insertions[lineNum]) {
-                    insertions[lineNum].forEach(c => {
-                        output.push(`<!-- [${COMMENT_TYPES[c.type].tag}: ${c.text}] -->`);
-                    });
+            // Process block-level comments (no text selection) â€” place above the block
+            if (blockComments.length > 0) {
+                const lines = content.split('\n');
+                const insertions = {};
+                blockComments.forEach(c => {
+                    const block = blocks.find(b => b.id === c.blockId);
+                    if (!block) return;
+                    const key = block.startLine;
+                    if (!insertions[key]) insertions[key] = [];
+                    insertions[key].push(c);
+                });
+                const output = [];
+                for (let i = 0; i < lines.length; i++) {
+                    const lineNum = i + 1;
+                    if (insertions[lineNum]) {
+                        insertions[lineNum].forEach(c => {
+                            output.push(`<!-- [${COMMENT_TYPES[c.type].tag}: ${c.text}] -->`);
+                        });
+                    }
+                    output.push(lines[i]);
                 }
-                output.push(lines[i]);
+                content = output.join('\n');
             }
 
             const baseName = filenameEl.textContent.replace(/\.md$/, '') || 'thesis';
             const fileName = `${baseName}_annotated.md`;
-            const content = output.join('\n');
 
             // Strategy 1: Use File System Access API (Chrome 86+) â€” gives a real Save As dialog
             if (window.showSaveFilePicker) {
@@ -1916,4 +1952,3 @@
 </body>
 
 </html>
-

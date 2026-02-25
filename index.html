@@ -1231,11 +1231,12 @@
         </div>
         <div class="topbar-right">
             <span class="topbar-badge" id="commentCount">0 comments</span>
-            <button class="btn btn-sm" id="btnThemeToggle" title="Toggle Light/Dark Theme">ðŸŒ“</button>
+            <button class="btn btn-sm" id="btnThemeToggle" title="Toggle Light/Dark Theme">â—</button>
             <button class="btn btn-guide" id="btnGuide"
-                title="Toggle Section Guide â€” shows what each section should contain">ðŸ“ Section Guide</button>
-            <button class="btn" id="btnImport" title="Import annotated .md">ðŸ“‚ Import</button>
-            <button class="btn-primary btn" id="btnExport" title="Export annotated .md">â¬‡ Export</button>
+                title="Toggle Section Guide â€” shows what each section should contain">â–¦ Section Guide</button>
+            <button class="btn" id="btnImport" title="Import annotated .md">â†¥ Import</button>
+            <button class="btn-primary btn" id="btnExport" title="Export annotated .md">â†“ Export</button>
+
         </div>
     </div>
 
@@ -1244,7 +1245,7 @@
         <div class="main-panel" id="mainPanel">
             <div class="landing" id="landing">
                 <div class="drop-zone" id="dropZone">
-                    <div class="drop-zone-icon">ðŸ“„</div>
+                    <div class="drop-zone-icon">&#x229E;</div>
                     <h2>Load Your Markdown</h2>
                     <p>Drag & drop your <strong>.md</strong> file here, or click to browse</p>
                     <button class="btn-primary btn" id="btnBrowse">Browse Files</button>
@@ -1257,7 +1258,7 @@
         <!-- SIDEBAR -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <h3>ðŸ’¬ Review Comments</h3>
+                <h3>&#x25C6; Review Comments</h3>
                 <div style="display:flex; gap:8px;">
                     <button class="btn btn-sm" id="btnUndo" style="display:none;" title="Undo previous action">â†©
                         Undo</button>
@@ -1275,7 +1276,7 @@
             </div>
             <div class="sidebar-content" id="commentsList">
                 <div class="empty-state">
-                    <div class="empty-state-icon">ðŸ’­</div>
+                    <div class="empty-state-icon">&#x25CB;</div>
                     <p>Click on any section in your document to add a review comment</p>
                 </div>
             </div>
@@ -1288,16 +1289,16 @@
     <!-- COMMENT INPUT PANEL (slides up from bottom) -->
     <div class="comment-input-panel" id="commentPanel">
         <div class="comment-input-header">
-            <h4>ðŸ“ Add Comment to: <span id="sectionRef" style="color:var(--accent-indigo)"></span></h4>
+            <h4>&#x25B8; Add Comment to: <span id="sectionRef" style="color:var(--accent-indigo)"></span></h4>
             <button class="btn btn-sm" id="btnCancelComment">âœ• Cancel</button>
         </div>
         <div class="comment-type-selector" id="typeSelector">
-            <span class="type-chip selected" data-type="comment">ðŸ’¬ Comment</span>
-            <span class="type-chip" data-type="todo">ðŸ“‹ Todo</span>
-            <span class="type-chip" data-type="improve">âœ¨ Improve</span>
-            <span class="type-chip" data-type="clarify">â“ Clarify</span>
-            <span class="type-chip" data-type="check">ðŸ” Check</span>
-            <span class="type-chip" data-type="restructure">ðŸ”€ Restructure</span>
+            <span class="type-chip selected" data-type="comment">&#x25C6; Comment</span>
+            <span class="type-chip" data-type="todo">&#x2610; Todo</span>
+            <span class="type-chip" data-type="improve">&#x25B2; Improve</span>
+            <span class="type-chip" data-type="clarify">? Clarify</span>
+            <span class="type-chip" data-type="check">&#x25CE; Check</span>
+            <span class="type-chip" data-type="restructure">&#x21C4; Restructure</span>
         </div>
         <div class="comment-input-body">
             <textarea class="comment-textarea" id="commentText"
@@ -1375,12 +1376,12 @@
         });
 
         const COMMENT_TYPES = {
-            comment: { label: 'COMMENT', emoji: 'ðŸ’¬', color: 'var(--color-comment)', tag: 'COMMENT' },
-            todo: { label: 'TODO', emoji: 'ðŸ“‹', color: 'var(--color-todo)', tag: 'TODO' },
-            improve: { label: 'IMPROVE', emoji: 'âœ¨', color: 'var(--color-improve)', tag: 'IMPROVE' },
-            clarify: { label: 'CLARIFY', emoji: 'â“', color: 'var(--color-clarify)', tag: 'CLARIFY' },
-            check: { label: 'CHECK', emoji: 'ðŸ”', color: 'var(--color-check)', tag: 'CHECK' },
-            restructure: { label: 'RESTRUCTURE', emoji: 'ðŸ”€', color: 'var(--color-restructure)', tag: 'RESTRUCTURE' },
+            comment: { label: 'COMMENT', emoji: '\u25C6', color: 'var(--color-comment)', tag: 'COMMENT' },
+            todo: { label: 'TODO', emoji: '\u2610', color: 'var(--color-todo)', tag: 'TODO' },
+            improve: { label: 'IMPROVE', emoji: '\u25B2', color: 'var(--color-improve)', tag: 'IMPROVE' },
+            clarify: { label: 'CLARIFY', emoji: '?', color: 'var(--color-clarify)', tag: 'CLARIFY' },
+            check: { label: 'CHECK', emoji: '\u25CE', color: 'var(--color-check)', tag: 'CHECK' },
+            restructure: { label: 'RESTRUCTURE', emoji: '\u21C4', color: 'var(--color-restructure)', tag: 'RESTRUCTURE' },
         };
 
         // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -1893,7 +1894,7 @@
             // Sidebar
             const filtered = activeFilter === 'all' ? comments : comments.filter(c => c.type === activeFilter);
             if (filtered.length === 0) {
-                commentsList.innerHTML = `<div class="empty-state"><div class="empty-state-icon">ðŸ’­</div><p>${comments.length === 0 ? 'Click on any section to add a review comment' : 'No comments match this filter'}</p></div>`;
+                commentsList.innerHTML = `<div class="empty-state"><div class="empty-state-icon">\u25CB</div><p>${comments.length === 0 ? 'Click on any section to add a review comment' : 'No comments match this filter'}</p></div>`;
             } else {
                 commentsList.innerHTML = '';
                 filtered.forEach(c => {
@@ -1907,8 +1908,8 @@
         <div class="comment-card-text">${escapeHtml(c.text)}</div>
         <div class="comment-card-preview">${escapeHtml(c.sectionPreview)}</div>
         <div class="comment-card-actions">
-          <button class="card-action-btn edit" title="Edit">âœ</button>
-          <button class="card-action-btn delete" title="Delete">ðŸ—‘</button>
+          <button class="card-action-btn edit" title="Edit">&#x270E;</button>
+          <button class="card-action-btn delete" title="Delete">&#x2715;</button>
         </div>
       `;
                     card.addEventListener('click', e => {

@@ -1761,13 +1761,21 @@
                     // 2. Apply text highlights
                     let currentHtml = el.innerHTML;
                     blockComments.forEach(c => {
-                        if (c.selectedText && c.selectedText.length > 0) {
-                            // Escape regex chars in selectedText, then replace the first occurrence
-                            const escapedText = c.selectedText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-                            // Use basic string replacement to avoid matching across HTML tags if possible, 
-                            // fallback to simple replace for robustness in this simple markdown structure
-                            const markTag = `<mark class="highlight-mark type-${c.type}">${c.selectedText}</mark>`;
-                            currentHtml = currentHtml.replace(c.selectedText, markTag);
+                        if (c.selectedText && c.selectedText.trim().length > 0) {
+                            // Extract just user text, escape it for HTML matching
+                            const safeMatchText = escapeHtml(c.selectedText);
+
+                            // We construct a flexible regex pattern. 
+                            // Markdown rendering might introduce <br>, extra spaces, etc.
+                            // We split by whitespace, escape regex characters, and join with a flexible whitespace/HTML matcher
+                            const words = safeMatchText.trim().split(/\s+/).map(w => w.replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&'));
+                            // This regex matches the words separated by spaces or any HTML tags in between
+                            const pattern = new RegExp('(' + words.join('(?:\\s|<[^>]+>)+') + ')');
+
+                            const markTagStart = `<mark class="highlight-mark type-${c.type}">`;
+                            const markTagEnd = `</mark>`;
+
+                            currentHtml = currentHtml.replace(pattern, markTagStart + '$1' + markTagEnd);
                         }
                     });
                     el.innerHTML = currentHtml;

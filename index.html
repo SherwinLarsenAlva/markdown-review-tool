@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown Review Tool</title>
+    <title>Thesis Review Tool</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
@@ -133,7 +133,7 @@
             overflow: hidden;
         }
 
-        /* â•â•â• TOP BAR â•â•â• */
+        /* ═══ TOP BAR ═══ */
         .topbar {
             position: fixed;
             top: 0;
@@ -195,7 +195,7 @@
             color: var(--accent-indigo);
         }
 
-        /* â•â•â• BUTTONS â•â•â• */
+        /* ═══ BUTTONS ═══ */
         .btn {
             padding: 8px 16px;
             border-radius: 8px;
@@ -243,14 +243,14 @@
             background: rgba(239, 68, 68, 0.12);
         }
 
-        /* â•â•â• LAYOUT â•â•â• */
+        /* ═══ LAYOUT ═══ */
         .app-layout {
             display: flex;
             margin-top: 56px;
             height: calc(100vh - 56px);
         }
 
-        /* â•â•â• MAIN CONTENT â•â•â• */
+        /* ═══ MAIN CONTENT ═══ */
         .main-panel {
             flex: 1;
             overflow-y: auto;
@@ -271,7 +271,7 @@
             border-radius: 3px;
         }
 
-        /* â•â•â• SIDEBAR â•â•â• */
+        /* ═══ SIDEBAR ═══ */
         .sidebar {
             width: 380px;
             min-width: 380px;
@@ -338,7 +338,7 @@
             border-radius: 2px;
         }
 
-        /* â•â•â• LANDING / DROP ZONE â•â•â• */
+        /* ═══ LANDING / DROP ZONE ═══ */
         .landing {
             display: flex;
             align-items: center;
@@ -384,7 +384,7 @@
             display: none;
         }
 
-        /* â•â•â• RENDERED MARKDOWN â•â•â• */
+        /* ═══ RENDERED MARKDOWN ═══ */
         .md-block {
             position: relative;
             padding: 10px 16px;
@@ -610,7 +610,7 @@
             background: rgba(124, 92, 252, 0.04);
         }
 
-        /* â•â•â• COMMENT INPUT PANEL â•â•â• */
+        /* ═══ COMMENT INPUT PANEL ═══ */
         .comment-input-panel {
             position: fixed;
             bottom: 0;
@@ -741,7 +741,7 @@
             align-self: flex-end;
         }
 
-        /* â•â•â• SIDEBAR COMMENT CARDS â•â•â• */
+        /* ═══ SIDEBAR COMMENT CARDS ═══ */
         .comment-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -873,7 +873,7 @@
             background: var(--bg-card-action-btn-delete-hover);
         }
 
-        /* â•â•â• FILTER BAR â•â•â• */
+        /* ═══ FILTER BAR ═══ */
         .filter-bar {
             display: flex;
             gap: 4px;
@@ -945,7 +945,7 @@
             border-color: var(--color-restructure);
         }
 
-        /* â•â•â• STATS FOOTER â•â•â• */
+        /* ═══ STATS FOOTER ═══ */
         .sidebar-footer {
             padding: 12px 20px;
             border-top: 1px solid var(--border);
@@ -973,7 +973,7 @@
             border-radius: 50%;
         }
 
-        /* â•â•â• EMPTY STATE â•â•â• */
+        /* ═══ EMPTY STATE ═══ */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -990,7 +990,7 @@
             font-size: 13px;
         }
 
-        /* â•â•â• TOAST â•â•â• */
+        /* ═══ TOAST ═══ */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -1011,7 +1011,7 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* â•â•â• SECTION PREVIEW TOOLTIP â•â•â• */
+        /* ═══ SECTION PREVIEW TOOLTIP ═══ */
         .section-label {
             display: inline-block;
             padding: 2px 8px;
@@ -1025,7 +1025,7 @@
             letter-spacing: 0.03em;
         }
 
-        /* â•â•â• SECTION GUIDE â•â•â• */
+        /* ═══ SECTION GUIDE ═══ */
         .section-guide-banner {
             display: none;
             margin: 0 0 4px;
@@ -1199,7 +1199,7 @@
             color: var(--accent-indigo);
         }
 
-        /* â•â•â• RESPONSIVE â•â•â• */
+        /* ═══ RESPONSIVE ═══ */
         @media (max-width: 900px) {
             .sidebar {
                 width: 300px;
@@ -1223,19 +1223,19 @@
     <!-- TOP BAR -->
     <div class="topbar">
         <div class="topbar-left">
-            <div class="topbar-logo">MR</div>
+            <div class="topbar-logo">TR</div>
             <div>
-                <div class="topbar-title">Markdown Review Tool</div>
+                <div class="topbar-title">Thesis Review Tool</div>
                 <div class="topbar-file" id="filename">No file loaded</div>
             </div>
         </div>
         <div class="topbar-right">
             <span class="topbar-badge" id="commentCount">0 comments</span>
-            <button class="btn btn-sm" id="btnThemeToggle" title="Toggle Light/Dark Theme">ðŸŒ“</button>
+            <button class="btn btn-sm" id="btnThemeToggle" title="Toggle Light/Dark Theme">🌓</button>
             <button class="btn btn-guide" id="btnGuide"
-                title="Toggle Section Guide â€” shows what each section should contain">ðŸ“ Section Guide</button>
-            <button class="btn" id="btnImport" title="Import annotated .md">ðŸ“‚ Import</button>
-            <button class="btn-primary btn" id="btnExport" title="Export annotated .md">â¬‡ Export</button>
+                title="Toggle Section Guide — shows what each section should contain">📐 Section Guide</button>
+            <button class="btn" id="btnImport" title="Import annotated .md">📂 Import</button>
+            <button class="btn-primary btn" id="btnExport" title="Export annotated .md">⬇ Export</button>
         </div>
     </div>
 
@@ -1244,8 +1244,8 @@
         <div class="main-panel" id="mainPanel">
             <div class="landing" id="landing">
                 <div class="drop-zone" id="dropZone">
-                    <div class="drop-zone-icon">ðŸ“„</div>
-                    <h2>Load Your Markdown</h2>
+                    <div class="drop-zone-icon">📄</div>
+                    <h2>Load Your Thesis</h2>
                     <p>Drag & drop your <strong>.md</strong> file here, or click to browse</p>
                     <button class="btn-primary btn" id="btnBrowse">Browse Files</button>
                     <input type="file" id="fileInput" accept=".md,.txt,.markdown">
@@ -1257,9 +1257,9 @@
         <!-- SIDEBAR -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <h3>ðŸ’¬ Review Comments</h3>
+                <h3>💬 Review Comments</h3>
                 <div style="display:flex; gap:8px;">
-                    <button class="btn btn-sm" id="btnUndo" style="display:none;" title="Undo previous action">â†©
+                    <button class="btn btn-sm" id="btnUndo" style="display:none;" title="Undo previous action">↩
                         Undo</button>
                     <button class="btn btn-sm" id="btnClearAll">Clear All</button>
                 </div>
@@ -1275,8 +1275,8 @@
             </div>
             <div class="sidebar-content" id="commentsList">
                 <div class="empty-state">
-                    <div class="empty-state-icon">ðŸ’­</div>
-                    <p>Click on any section in your document to add a review comment</p>
+                    <div class="empty-state-icon">💭</div>
+                    <p>Click on any section in your thesis to add a review comment</p>
                 </div>
             </div>
             <div class="sidebar-footer">
@@ -1288,16 +1288,16 @@
     <!-- COMMENT INPUT PANEL (slides up from bottom) -->
     <div class="comment-input-panel" id="commentPanel">
         <div class="comment-input-header">
-            <h4>ðŸ“ Add Comment to: <span id="sectionRef" style="color:var(--accent-indigo)"></span></h4>
-            <button class="btn btn-sm" id="btnCancelComment">âœ• Cancel</button>
+            <h4>📝 Add Comment to: <span id="sectionRef" style="color:var(--accent-indigo)"></span></h4>
+            <button class="btn btn-sm" id="btnCancelComment">✕ Cancel</button>
         </div>
         <div class="comment-type-selector" id="typeSelector">
-            <span class="type-chip selected" data-type="comment">ðŸ’¬ Comment</span>
-            <span class="type-chip" data-type="todo">ðŸ“‹ Todo</span>
-            <span class="type-chip" data-type="improve">âœ¨ Improve</span>
-            <span class="type-chip" data-type="clarify">â“ Clarify</span>
-            <span class="type-chip" data-type="check">ðŸ” Check</span>
-            <span class="type-chip" data-type="restructure">ðŸ”€ Restructure</span>
+            <span class="type-chip selected" data-type="comment">💬 Comment</span>
+            <span class="type-chip" data-type="todo">📋 Todo</span>
+            <span class="type-chip" data-type="improve">✨ Improve</span>
+            <span class="type-chip" data-type="clarify">❓ Clarify</span>
+            <span class="type-chip" data-type="check">🔍 Check</span>
+            <span class="type-chip" data-type="restructure">🔀 Restructure</span>
         </div>
         <div class="comment-input-body">
             <textarea class="comment-textarea" id="commentText"
@@ -1315,9 +1315,9 @@
     <input type="file" id="importInput" accept=".md,.txt,.markdown" style="display:none;">
 
     <script>
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // STATE
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         let rawMarkdown = '';
         let blocks = [];          // { id, startLine, endLine, rawText, html }
         let comments = [];        // { id, blockId, type, text, sectionPreview, selectedText }
@@ -1331,9 +1331,9 @@
 
         // (Theme logic moved below DOM ref initialization)
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // AUTO-SAVE TO LOCALSTORAGE
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         const STORAGE_KEY = 'mdReviewToolState';
 
         function saveState() {
@@ -1344,7 +1344,7 @@
                     filename: filenameEl.textContent
                 };
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-            } catch (e) { /* quota exceeded or private mode â€” silently ignore */ }
+            } catch (e) { /* quota exceeded or private mode — silently ignore */ }
         }
 
         function restoreState() {
@@ -1374,17 +1374,17 @@
         });
 
         const COMMENT_TYPES = {
-            comment: { label: 'COMMENT', emoji: 'ðŸ’¬', color: 'var(--color-comment)', tag: 'COMMENT' },
-            todo: { label: 'TODO', emoji: 'ðŸ“‹', color: 'var(--color-todo)', tag: 'TODO' },
-            improve: { label: 'IMPROVE', emoji: 'âœ¨', color: 'var(--color-improve)', tag: 'IMPROVE' },
-            clarify: { label: 'CLARIFY', emoji: 'â“', color: 'var(--color-clarify)', tag: 'CLARIFY' },
-            check: { label: 'CHECK', emoji: 'ðŸ”', color: 'var(--color-check)', tag: 'CHECK' },
-            restructure: { label: 'RESTRUCTURE', emoji: 'ðŸ”€', color: 'var(--color-restructure)', tag: 'RESTRUCTURE' },
+            comment: { label: 'COMMENT', emoji: '💬', color: 'var(--color-comment)', tag: 'COMMENT' },
+            todo: { label: 'TODO', emoji: '📋', color: 'var(--color-todo)', tag: 'TODO' },
+            improve: { label: 'IMPROVE', emoji: '✨', color: 'var(--color-improve)', tag: 'IMPROVE' },
+            clarify: { label: 'CLARIFY', emoji: '❓', color: 'var(--color-clarify)', tag: 'CLARIFY' },
+            check: { label: 'CHECK', emoji: '🔍', color: 'var(--color-check)', tag: 'CHECK' },
+            restructure: { label: 'RESTRUCTURE', emoji: '🔀', color: 'var(--color-restructure)', tag: 'RESTRUCTURE' },
         };
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // DOM REFS
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         const $ = id => document.getElementById(id);
         const mainPanel = $('mainPanel');
         const landing = $('landing');
@@ -1403,9 +1403,9 @@
         const themeToggleBtn = $('btnThemeToggle');
         const btnUndo = $('btnUndo');
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // HISTORY & UNDO
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         function saveToHistory() {
             undoHistory.push(JSON.stringify(comments));
             if (undoHistory.length > 50) undoHistory.shift();
@@ -1418,14 +1418,14 @@
             btnUndo.style.display = undoHistory.length > 0 ? 'inline-flex' : 'none';
             refreshUI();
             saveState();
-            showToast('Action undone â†©');
+            showToast('Action undone ↩');
         }
 
         btnUndo.addEventListener('click', performUndo);
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // AUTO-UPDATE NOTIFIER
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         async function checkForUpdates() {
             try {
                 const res = await fetch('https://raw.githubusercontent.com/SherwinLarsenAlva/markdown-review-tool/main/index.html', { cache: 'no-store' });
@@ -1437,7 +1437,7 @@
                     notify.className = 'toast show';
                     notify.style.backgroundColor = 'var(--accent-indigo)';
                     notify.style.bottom = '80px'; // Sit above regular toast
-                    notify.innerHTML = `ðŸš€ New version (${match[1]}) available! <a href="https://github.com/SherwinLarsenAlva/markdown-review-tool" target="_blank" style="color:white;font-weight:bold;text-decoration:underline;margin-left:8px;">Update</a>`;
+                    notify.innerHTML = `🚀 New version (${match[1]}) available! <a href="https://github.com/SherwinLarsenAlva/markdown-review-tool" target="_blank" style="color:white;font-weight:bold;text-decoration:underline;margin-left:8px;">Update</a>`;
                     document.body.appendChild(notify);
                     setTimeout(() => notify.classList.remove('show'), 12000);
                 }
@@ -1445,9 +1445,9 @@
         }
         setTimeout(checkForUpdates, 3000);
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // THEME MANAGEMENT
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         function setTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('mdReviewTheme', theme);
@@ -1476,9 +1476,9 @@
 
         initTheme();
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // FILE LOADING
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         $('btnBrowse').addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', e => loadFile(e.target.files[0]));
         $('btnImport').addEventListener('click', () => importInput.click());
@@ -1558,9 +1558,9 @@
             return { cleanMd: joinedMd, extractedComments: extracted };
         }
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-        // MARKDOWN PARSER â€” splits into blocks and renders
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
+        // MARKDOWN PARSER — splits into blocks and renders
+        // ══════════════════════════════════════════════════
         function parseAndRender(md) {
             blocks = [];
             const lines = md.split('\n');
@@ -1600,7 +1600,7 @@
                     pushBlock();
                     currentBlock = { id: blockId++, startLine: lineNum, _lastLine: lineNum, rawText: line, blockType: 'caption' };
                     pushBlock(); currentBlock = null;
-                } else if (/^[â€¢\-\*]\s/.test(line) || /^\d+[.)]\s/.test(line)) {
+                } else if (/^[•\-\*]\s/.test(line) || /^\d+[.)]\s/.test(line)) {
                     if (!currentBlock || currentBlock.blockType !== 'list') {
                         pushBlock();
                         currentBlock = { id: blockId++, startLine: lineNum, _lastLine: lineNum, rawText: line, blockType: 'list' };
@@ -1665,7 +1665,7 @@
                     const tag = isOrdered ? 'ol' : 'ul';
                     let html = `<${tag}>`;
                     items.forEach(item => {
-                        const content = item.replace(/^[â€¢\-\*]\s+|^\d+[.)]\s+/, '');
+                        const content = item.replace(/^[•\-\*]\s+|^\d+[.)]\s+/, '');
                         html += `<li>${escapeHtml(content).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>')}</li>`;
                     });
                     html += `</${tag}>`;
@@ -1688,7 +1688,7 @@
                 const div = document.createElement('div');
                 div.className = 'md-block';
                 div.dataset.blockId = block.id;
-                div.innerHTML = `<span class="section-label">Line ${block.startLine}${block.endLine && block.endLine !== block.startLine ? 'â€“' + block.endLine : ''}</span>${block.html}`;
+                div.innerHTML = `<span class="section-label">Line ${block.startLine}${block.endLine && block.endLine !== block.startLine ? '–' + block.endLine : ''}</span>${block.html}`;
                 div.dataset.originalHtml = div.innerHTML; // Store original HTML for highlight rebuilding
 
                 // Inject section guide banner for heading blocks
@@ -1701,19 +1701,51 @@
                         div.appendChild(banner);
                     }
                 }
-                div.addEventListener('click', () => selectBlock(block.id));
+                div.addEventListener('click', (e) => {
+                    if (!e.target.closest('.section-guide-banner')) {
+                        selectBlock(block.id);
+                    }
+                });
                 rendered.appendChild(div);
             });
             refreshUI();
         }
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // BLOCK SELECTION & COMMENTING
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         function selectBlock(blockId) {
-            // Capture any text the user highlighted BEFORE we change focus
+            // 1. Remove unresolved temp highlights
+            const existingTemp = document.getElementById('temp-mark-id');
+            if (existingTemp) {
+                const parent = existingTemp.parentNode;
+                while (existingTemp.firstChild) parent.insertBefore(existingTemp.firstChild, existingTemp);
+                parent.removeChild(existingTemp);
+            }
+
+            // Capture precise selection before focus changes
             const sel = window.getSelection();
-            const selText = sel ? sel.toString().trim() : '';
+            let selText = '';
+
+            if (sel && sel.rangeCount > 0) {
+                selText = sel.toString().trim();
+                const range = sel.getRangeAt(0);
+                const blockEl = document.querySelector(`.md-block[data-block-id="${blockId}"]`);
+
+                // Validate selection is inside this specific block
+                if (selText && blockEl && blockEl.contains(range.commonAncestorContainer)) {
+                    try {
+                        const mark = document.createElement('mark');
+                        mark.id = 'temp-mark-id';
+                        mark.className = 'highlight-mark temp-selection';
+                        mark.style.backgroundColor = 'rgba(250, 204, 21, 0.4)'; // temp yellow
+                        mark.appendChild(range.extractContents());
+                        range.insertNode(mark);
+                        sel.removeAllRanges();
+                    } catch (e) { console.warn('Failed to wrap selection:', e); }
+                }
+            }
+
             pendingSelectedText = selText;
 
             activeBlockId = blockId;
@@ -1725,10 +1757,10 @@
             if (el) el.classList.add('active');
             // Show panel with selection info
             if (pendingSelectedText) {
-                const preview = pendingSelectedText.length > 60 ? pendingSelectedText.slice(0, 60) + 'â€¦' : pendingSelectedText;
-                sectionRef.innerHTML = `Line ${block.startLine} â€” <span style="color:#f59e0b;font-style:italic;">"${escapeHtml(preview)}"</span>`;
+                const preview = pendingSelectedText.length > 60 ? pendingSelectedText.slice(0, 60) + '…' : pendingSelectedText;
+                sectionRef.innerHTML = `Line ${block.startLine} — <span style="color:#f59e0b;font-style:italic;">"${escapeHtml(preview)}"</span>`;
             } else {
-                sectionRef.textContent = `Line ${block.startLine} â€” ${truncate(block.rawText, 50)}`;
+                sectionRef.textContent = `Line ${block.startLine} — ${truncate(block.rawText, 50)}`;
             }
             commentPanel.classList.add('visible');
             commentText.value = '';
@@ -1753,10 +1785,17 @@
             commentPanel.classList.remove('visible');
             activeBlockId = null; editingCommentId = null;
             document.querySelectorAll('.md-block').forEach(el => el.classList.remove('active'));
+            // Remove unresolved temp highlights
+            const existingTemp = document.getElementById('temp-mark-id');
+            if (existingTemp) {
+                const parent = existingTemp.parentNode;
+                while (existingTemp.firstChild) parent.insertBefore(existingTemp.firstChild, existingTemp);
+                parent.removeChild(existingTemp);
+            }
         });
 
         commentText.addEventListener('keydown', e => {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' || e.keyCode === 13) {
                 if (!e.shiftKey) {
                     e.preventDefault();
                     submitComment();
@@ -1776,8 +1815,9 @@
                 if (c) { c.type = selectedType; c.text = text; }
                 editingCommentId = null;
             } else {
+                const newCommentId = Date.now() + Math.random();
                 comments.push({
-                    id: Date.now() + Math.random(),
+                    id: newCommentId,
                     blockId: activeBlockId,
                     type: selectedType,
                     text: text,
@@ -1786,6 +1826,18 @@
                         ? '"' + truncate(pendingSelectedText, 50) + '"'
                         : truncate(block.rawText, 60)
                 });
+
+                // Commit temp highlight to DOM
+                const tempMark = document.getElementById('temp-mark-id');
+                if (tempMark) {
+                    tempMark.id = '';
+                    tempMark.className = `highlight-mark type-${selectedType}`;
+                    tempMark.dataset.commentId = newCommentId;
+                    tempMark.style.backgroundColor = '';
+
+                    const blockEl = document.querySelector(`.md-block[data-block-id="${activeBlockId}"]`);
+                    if (blockEl) blockEl.dataset.originalHtml = blockEl.innerHTML;
+                }
             }
 
             pendingSelectedText = '';
@@ -1795,55 +1847,50 @@
             document.querySelectorAll('.md-block').forEach(el => el.classList.remove('active'));
             refreshUI();
             saveState();
-            showToast('Comment added âœ“');
+            showToast('Comment added ✓');
         }
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // REFRESH UI
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         function refreshUI() {
             // Update block indicators & text highlights
             document.querySelectorAll('.md-block').forEach(el => {
                 const bid = parseInt(el.dataset.blockId);
                 const blockComments = comments.filter(c => c.blockId === bid);
 
-                // 1. Reset block to its original, unhighlighted state
+                // 1. Reset block to its original structural state
                 if (el.dataset.originalHtml) {
                     el.innerHTML = el.dataset.originalHtml;
                 }
                 el.classList.remove('has-comment', 'type-comment', 'type-todo', 'type-improve', 'type-clarify', 'type-check', 'type-restructure');
 
+                // 2. Reconcile existing marks with latest comments state
+                let domChanged = false;
+                el.querySelectorAll('.highlight-mark:not(.temp-selection)').forEach(mark => {
+                    const cid = parseFloat(mark.dataset.commentId);
+                    const c = blockComments.find(x => x.id === cid);
+                    if (!c) {
+                        // Un-highlight if comment was deleted
+                        const parent = mark.parentNode;
+                        while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+                        parent.removeChild(mark);
+                        domChanged = true;
+                    } else {
+                        // Ensure color matches the current comment type
+                        const expectedClass = `highlight-mark type-${c.type}`;
+                        if (mark.className !== expectedClass) {
+                            mark.className = expectedClass;
+                            domChanged = true;
+                        }
+                    }
+                });
+
+                if (domChanged) {
+                    el.dataset.originalHtml = el.innerHTML;
+                }
+
                 if (blockComments.length > 0) {
-                    // 2. Apply text highlights
-                    let currentHtml = el.innerHTML;
-                    blockComments.forEach(c => {
-                        if (c.selectedText && c.selectedText.trim().length > 0) {
-                            // Extract just user text, escape it for HTML matching
-                            const safeMatchText = escapeHtml(c.selectedText);
-
-                            // We construct a flexible regex pattern. 
-                            // Markdown rendering might introduce <br>, extra spaces, etc.
-                            // We split by whitespace, escape regex characters, and join with a flexible whitespace/HTML matcher
-                            const words = safeMatchText.trim().split(/\s+/).map(w => w.replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&'));
-                            // This regex matches the words separated by spaces or any HTML tags in between
-                            const pattern = new RegExp('(' + words.join('(?:\\s|<[^>]+>)+') + ')');
-
-                            const markTagStart = `<mark class="highlight-mark type-${c.type}">`;
-                            const markTagEnd = `</mark>`;
-
-                            currentHtml = currentHtml.replace(pattern, markTagStart + '$1' + markTagEnd);
-                        }
-                    });
-                    el.innerHTML = currentHtml;
-
-                    // 3. Re-attach event listeners since innerHTML was replaced
-                    el.addEventListener('click', (e) => {
-                        // Prevent triggering block selection if clicking a guide or indicator directly
-                        if (!e.target.closest('.section-guide-banner')) {
-                            selectBlock(bid);
-                        }
-                    });
-
                     // 4. Update block edge color and counter
                     const last = blockComments[blockComments.length - 1];
                     el.classList.add('has-comment', `type-${last.type}`);
@@ -1865,7 +1912,7 @@
             // Sidebar
             const filtered = activeFilter === 'all' ? comments : comments.filter(c => c.type === activeFilter);
             if (filtered.length === 0) {
-                commentsList.innerHTML = `<div class="empty-state"><div class="empty-state-icon">ðŸ’­</div><p>${comments.length === 0 ? 'Click on any section to add a review comment' : 'No comments match this filter'}</p></div>`;
+                commentsList.innerHTML = `<div class="empty-state"><div class="empty-state-icon">💭</div><p>${comments.length === 0 ? 'Click on any section to add a review comment' : 'No comments match this filter'}</p></div>`;
             } else {
                 commentsList.innerHTML = '';
                 filtered.forEach(c => {
@@ -1879,8 +1926,8 @@
         <div class="comment-card-text">${escapeHtml(c.text)}</div>
         <div class="comment-card-preview">${escapeHtml(c.sectionPreview)}</div>
         <div class="comment-card-actions">
-          <button class="card-action-btn edit" title="Edit">âœ</button>
-          <button class="card-action-btn delete" title="Delete">ðŸ—‘</button>
+          <button class="card-action-btn edit" title="Edit">✏</button>
+          <button class="card-action-btn delete" title="Delete">🗑</button>
         </div>
       `;
                     card.addEventListener('click', e => {
@@ -1923,7 +1970,7 @@
             activeBlockId = c.blockId;
             editingCommentId = commentId;
             const block = blocks.find(b => b.id === c.blockId);
-            sectionRef.textContent = `Line ${block.startLine} â€” ${truncate(block.rawText, 50)}`;
+            sectionRef.textContent = `Line ${block.startLine} — ${truncate(block.rawText, 50)}`;
             commentText.value = c.text;
             setType(c.type);
             commentPanel.classList.add('visible');
@@ -1938,9 +1985,9 @@
             showToast('Comment deleted');
         }
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // FILTER
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         document.querySelectorAll('.filter-chip').forEach(chip => {
             chip.addEventListener('click', () => {
                 activeFilter = chip.dataset.filter;
@@ -1949,9 +1996,9 @@
             });
         });
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // CLEAR ALL
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         $('btnClearAll').addEventListener('click', () => {
             if (comments.length === 0) return;
             if (confirm('Remove all comments?')) {
@@ -1963,9 +2010,9 @@
             }
         });
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // EXPORT
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         $('btnExport').addEventListener('click', exportAnnotated);
 
         function exportAnnotated() {
@@ -1976,7 +2023,7 @@
 
             let content = rawMarkdown;
 
-            // Process inline comments (those with selectedText) â€” place tag right after the selected text
+            // Process inline comments (those with selectedText) — place tag right after the selected text
             // Sort by selectedText length descending to avoid overlapping replacements
             const inlineComments = comments.filter(c => c.selectedText && c.selectedText.length > 0)
                 .sort((a, b) => b.selectedText.length - a.selectedText.length);
@@ -1994,7 +2041,7 @@
                 }
             });
 
-            // Process block-level comments (no text selection) â€” place above the block
+            // Process block-level comments (no text selection) — place above the block
             if (blockComments.length > 0) {
                 const lines = content.split('\n');
                 const insertions = {};
@@ -2021,7 +2068,7 @@
             const baseName = filenameEl.textContent.replace(/\.md$/, '') || 'thesis';
             const fileName = `${baseName}_annotated.md`;
 
-            // Strategy 1: Use File System Access API (Chrome 86+) â€” gives a real Save As dialog
+            // Strategy 1: Use File System Access API (Chrome 86+) — gives a real Save As dialog
             if (window.showSaveFilePicker) {
                 (async () => {
                     try {
@@ -2035,7 +2082,7 @@
                         const writable = await handle.createWritable();
                         await writable.write(content);
                         await writable.close();
-                        showToast(`Saved "${fileName}" with ${comments.length} comment(s) âœ“`);
+                        showToast(`Saved "${fileName}" with ${comments.length} comment(s) ✓`);
                     } catch (err) {
                         // User cancelled the save dialog
                         if (err.name !== 'AbortError') {
@@ -2060,22 +2107,22 @@
                 document.body.appendChild(a);
                 a.click();
                 setTimeout(() => document.body.removeChild(a), 200);
-                showToast(`Exported "${fileName}" with ${comments.length} comment(s) âœ“`);
+                showToast(`Exported "${fileName}" with ${comments.length} comment(s) ✓`);
             } catch (err) {
                 // Strategy 3: Open in new tab for manual save
                 const win = window.open('', '_blank');
                 win.document.write('<pre>' + content.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>');
                 win.document.title = fileName;
-                showToast('Opened in new tab â€” use Ctrl+S to save');
+                showToast('Opened in new tab — use Ctrl+S to save');
             }
         }
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // UTILITIES
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         function truncate(str, max) {
             const clean = str.replace(/\n/g, ' ').replace(/#+\s*/, '').trim();
-            return clean.length > max ? clean.slice(0, max) + 'â€¦' : clean;
+            return clean.length > max ? clean.slice(0, max) + '…' : clean;
         }
 
         function showToast(msg) {
@@ -2084,162 +2131,162 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-        // SECTION GUIDE â€” maps headings to their purpose
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
+        // SECTION GUIDE — maps headings to their purpose
+        // ══════════════════════════════════════════════════
         const SECTION_GUIDES = [
             {
-                match: /abstract/i, style: 'abstract', icon: 'ðŸ“˜', title: 'Abstract',
+                match: /abstract/i, style: 'abstract', icon: '📘', title: 'Abstract',
                 purpose: 'Concisely summarize the entire thesis: problem, method, key results, and contribution.',
-                checklist: ['State the problem and motivation', 'Describe methodology in 1â€“2 sentences', 'Highlight key findings/results', 'State the main contribution', 'Keep under 300 words']
+                checklist: ['State the problem and motivation', 'Describe methodology in 1–2 sentences', 'Highlight key findings/results', 'State the main contribution', 'Keep under 300 words']
             },
             {
-                match: /foreword/i, style: 'foreword', icon: 'âœï¸', title: 'Foreword',
+                match: /foreword/i, style: 'foreword', icon: '✍️', title: 'Foreword',
                 purpose: 'Personal narrative on your motivation and the journey that led to this research.',
                 checklist: ['Share personal motivation', 'Connect to broader industry challenge', 'Set the reader\'s expectation']
             },
             {
-                match: /\b1\.?\s*(introduction|intro)\b|^#\s*1\./i, style: 'intro', icon: 'ðŸš€', title: 'Introduction',
+                match: /\b1\.?\s*(introduction|intro)\b|^#\s*1\./i, style: 'intro', icon: '🚀', title: 'Introduction',
                 purpose: 'Introduce the domain, state the problem, define research questions, and outline thesis structure.',
                 checklist: ['Establish context and motivation', 'Define the problem statement clearly', 'State research questions (RQs)', 'Summarize research objectives', 'Outline thesis structure (chapter overview)']
             },
             {
-                match: /context|motivation/i, style: 'intro', icon: 'ðŸŽ¯', title: 'Context & Motivation',
-                purpose: 'Establish why this research matters â€” the real-world problem and industry need.',
+                match: /context|motivation/i, style: 'intro', icon: '🎯', title: 'Context & Motivation',
+                purpose: 'Establish why this research matters — the real-world problem and industry need.',
                 checklist: ['Describe the cybersecurity landscape challenge', 'Identify the gap in current tools', 'Connect to organizational impact']
             },
             {
-                match: /problem\s*statement/i, style: 'intro', icon: 'âš ï¸', title: 'Problem Statement',
+                match: /problem\s*statement/i, style: 'intro', icon: '⚠️', title: 'Problem Statement',
                 purpose: 'Precisely define the technical and operational problem this thesis solves.',
                 checklist: ['Be specific about what is broken/missing', 'Explain consequences of the problem', 'Set scope boundaries']
             },
             {
-                match: /research\s*(gap|question|objective)/i, style: 'intro', icon: 'ðŸ”¬', title: 'Research Gap & Objectives',
+                match: /research\s*(gap|question|objective)/i, style: 'intro', icon: '🔬', title: 'Research Gap & Objectives',
                 purpose: 'Articulate the gap in existing solutions and what this thesis aims to achieve.',
                 checklist: ['Reference what existing work doesn\'t cover', 'List numbered research questions', 'Connect each RQ to a thesis component']
             },
             {
-                match: /limitation.*existing|existing.*approach/i, style: 'intro', icon: 'ðŸš§', title: 'Limitations of Existing Approaches',
+                match: /limitation.*existing|existing.*approach/i, style: 'intro', icon: '🚧', title: 'Limitations of Existing Approaches',
                 purpose: 'Critically analyze why current solutions (CVSS, Wazuh, NIST CSF alone) fall short.',
                 checklist: ['Compare strengths and weaknesses', 'Use a structured format (table or bullets)', 'Conclude with the gap your system fills']
             },
             {
-                match: /structure/i, style: 'intro', icon: 'ðŸ“‘', title: 'Thesis Structure',
-                purpose: 'Briefly outline what each chapter covers â€” a roadmap for the reader.',
+                match: /structure/i, style: 'intro', icon: '📑', title: 'Thesis Structure',
+                purpose: 'Briefly outline what each chapter covers — a roadmap for the reader.',
                 checklist: ['List each chapter with 1-line summary', 'Help reader navigate the document']
             },
             {
-                match: /company\s*background|resistine/i, style: 'foreword', icon: 'ðŸ¢', title: 'Company Background',
+                match: /company\s*background|resistine/i, style: 'foreword', icon: '🏢', title: 'Company Background',
                 purpose: 'Introduce the industrial partner and their relevance to the research.',
                 checklist: ['Describe the company\'s mission', 'Connect to thesis objectives', 'Note any collaboration context']
             },
             {
-                match: /\b2\.?\s*(background|theoretical)/i, style: 'background', icon: 'ðŸ“š', title: 'Background & Theoretical Foundations',
+                match: /\b2\.?\s*(background|theoretical)/i, style: 'background', icon: '📚', title: 'Background & Theoretical Foundations',
                 purpose: 'Establish the theoretical knowledge base the reader needs. Define key concepts used throughout.',
                 checklist: ['Define core terms (cyber risk, frameworks, LLMs)', 'Explain NIST CSF 2.0 structure', 'Cover CVSS, CVE, MITRE ATT&CK', 'Introduce Wazuh architecture', 'Summarize LLM applications in cybersecurity']
             },
             {
-                match: /cyber\s*risk/i, style: 'background', icon: 'ðŸ›¡ï¸', title: 'Cyber Risk Concepts',
+                match: /cyber\s*risk/i, style: 'background', icon: '🛡️', title: 'Cyber Risk Concepts',
                 purpose: 'Define cyber risk and explain how risk assessment and prioritization work.',
                 checklist: ['Define technical vs. business risk', 'Explain risk assessment process', 'Justify the need for prioritization']
             },
             {
-                match: /nist\s*(csf|cybersecurity\s*framework)/i, style: 'background', icon: 'ðŸ“‹', title: 'NIST CSF 2.0',
-                purpose: 'Explain the NIST CSF 2.0 framework structure â€” Functions, Categories, Subcategories.',
+                match: /nist\s*(csf|cybersecurity\s*framework)/i, style: 'background', icon: '📋', title: 'NIST CSF 2.0',
+                purpose: 'Explain the NIST CSF 2.0 framework structure — Functions, Categories, Subcategories.',
                 checklist: ['List all 6 Functions with descriptions', 'Explain Categories and Subcategories', 'Include the official reference table', 'Discuss Profiles and Implementation Tiers']
             },
             {
-                match: /vulnerability\s*scoring|cvss|cve|mitre/i, style: 'background', icon: 'ðŸ“Š', title: 'Vulnerability Scoring & Threat Intel',
+                match: /vulnerability\s*scoring|cvss|cve|mitre/i, style: 'background', icon: '📊', title: 'Vulnerability Scoring & Threat Intel',
                 purpose: 'Explain industry-standard scoring (CVSS, CVE, MITRE ATT&CK) and how they relate.',
                 checklist: ['Define CVSS metrics and limitations', 'Explain CVE/NVD databases', 'Describe MITRE ATT&CK structure', 'Show how they complement each other']
             },
             {
-                match: /wazuh/i, style: 'background', icon: 'ðŸ”', title: 'Wazuh Platform',
+                match: /wazuh/i, style: 'background', icon: '🔍', title: 'Wazuh Platform',
                 purpose: 'Describe the Wazuh SIEM architecture and the detection capabilities relevant to this thesis.',
                 checklist: ['Describe agent/manager/indexer components', 'Explain rule-based detection and SCA', 'Justify Wazuh as sole data source']
             },
             {
-                match: /large\s*language|llm/i, style: 'background', icon: 'ðŸ¤–', title: 'LLMs in Cybersecurity',
+                match: /large\s*language|llm/i, style: 'background', icon: '🤖', title: 'LLMs in Cybersecurity',
                 purpose: 'Summarize how LLMs are being applied in cybersecurity and what role they play in this thesis.',
                 checklist: ['List key applications (triage, threat intel, explanations)', 'Describe the approach used in this thesis', 'Address accuracy safeguards and ethical guardrails']
             },
             {
-                match: /\b3\.?\s*(related\s*work|state\s*of\s*(the\s*)?art)/i, style: 'related', icon: 'ðŸ”—', title: 'Related Work & State of the Art',
-                purpose: 'Review existing research, identify what\'s been done, and clearly position your document contribution.',
+                match: /\b3\.?\s*(related\s*work|state\s*of\s*(the\s*)?art)/i, style: 'related', icon: '🔗', title: 'Related Work & State of the Art',
+                purpose: 'Review existing research, identify what\'s been done, and clearly position your thesis contribution.',
                 checklist: ['Organize by thematic area', 'Cite specific papers with findings', 'Compare approaches critically', 'Clearly identify the gap your work fills', 'End each subsection with your differentiation']
             },
             {
-                match: /risk\s*prioritization\s*beyond/i, style: 'related', icon: 'ðŸ“ˆ', title: 'Related: Risk Prioritization',
+                match: /risk\s*prioritization\s*beyond/i, style: 'related', icon: '📈', title: 'Related: Risk Prioritization',
                 purpose: 'Review research on dynamic risk scoring that goes beyond static CVSS.',
-                checklist: ['Cite POLAR, EPSS, and similar frameworks', 'Explain how your VÂ·TÂ·A formula differs']
+                checklist: ['Cite POLAR, EPSS, and similar frameworks', 'Explain how your V·T·A formula differs']
             },
             {
-                match: /framework\s*alignment|siem\s*integration/i, style: 'related', icon: 'ðŸ”„', title: 'Related: Framework & SIEM Integration',
+                match: /framework\s*alignment|siem\s*integration/i, style: 'related', icon: '🔄', title: 'Related: Framework & SIEM Integration',
                 purpose: 'Review research on aligning SIEM outputs with governance frameworks.',
                 checklist: ['Cite NIST CSF + LLM studies', 'Reference Wazuh Copilot and similar', 'Highlight your deterministic approach']
             },
             {
-                match: /multi.agent|rag\s*in\s*security/i, style: 'related', icon: 'ðŸ¤', title: 'Related: Multi-Agent Systems & RAG',
+                match: /multi.agent|rag\s*in\s*security/i, style: 'related', icon: '🤝', title: 'Related: Multi-Agent Systems & RAG',
                 purpose: 'Review multi-agent AI systems and RAG techniques applied to SOC operations.',
                 checklist: ['Cite agentic AI taxonomies', 'Reference RAG + compliance studies', 'Explain your cyclic LangGraph approach']
             },
             {
-                match: /\b4\.?\s*(system\s*requirement|conceptual\s*model)/i, style: 'requirements', icon: 'ðŸ“', title: 'System Requirements & Conceptual Model',
+                match: /\b4\.?\s*(system\s*requirement|conceptual\s*model)/i, style: 'requirements', icon: '📐', title: 'System Requirements & Conceptual Model',
                 purpose: 'Define what the system must do (FRs), quality attributes (NFRs), and the high-level architecture.',
                 checklist: ['Present system overview diagram (or describe it)', 'List all functional requirements (FR-01 to FR-08)', 'List non-functional requirements', 'Describe domain-specific requirements', 'Show conceptual model layers', 'Use MoSCoW prioritization']
             },
             {
-                match: /\b5\.?\s*(methodology|implementation)/i, style: 'methodology', icon: 'âš™ï¸', title: 'Methodology & Implementation',
-                purpose: 'Describe HOW you built the system â€” research design, phased development, technical details, and decisions.',
+                match: /\b5\.?\s*(methodology|implementation)/i, style: 'methodology', icon: '⚙️', title: 'Methodology & Implementation',
+                purpose: 'Describe HOW you built the system — research design, phased development, technical details, and decisions.',
                 checklist: ['Explain design-science methodology', 'Describe the lab environment', 'Detail each implementation phase', 'Justify key architectural decisions', 'Include code/config references where appropriate', 'Explain RAG architecture and ingestion']
             },
             {
-                match: /research\s*design|lab\s*(environment|infrastructure)/i, style: 'methodology', icon: 'ðŸ§ª', title: 'Research Design & Lab Setup',
+                match: /research\s*design|lab\s*(environment|infrastructure)/i, style: 'methodology', icon: '🧪', title: 'Research Design & Lab Setup',
                 purpose: 'Describe research methodology and the physical/logical deployment infrastructure.',
                 checklist: ['Name methodology (design-science)', 'List all servers/nodes and their roles', 'Explain air-gapped architecture rationale']
             },
             {
-                match: /phase\s*(i|1|ii|2|iii|3|iv|4|v|5)/i, style: 'methodology', icon: 'ðŸ”§', title: 'Implementation Phase',
+                match: /phase\s*(i|1|ii|2|iii|3|iv|4|v|5)/i, style: 'methodology', icon: '🔧', title: 'Implementation Phase',
                 purpose: 'Detail the specific implementation work done in this phase.',
-                checklist: ['Describe input â†’ process â†’ output', 'Reference scripts and tools used', 'Show validation results']
+                checklist: ['Describe input → process → output', 'Reference scripts and tools used', 'Show validation results']
             },
             {
-                match: /rag\s*architecture|knowledge\s*ingestion|retrieval/i, style: 'methodology', icon: 'ðŸ§ ', title: 'RAG Architecture',
+                match: /rag\s*architecture|knowledge\s*ingestion|retrieval/i, style: 'methodology', icon: '🧠', title: 'RAG Architecture',
                 purpose: 'Explain the Retrieval-Augmented Generation pipeline: ingestion, indexing, retrieval techniques.',
                 checklist: ['Describe LanceDB vector store setup', 'Explain parent-child indexing', 'Detail metadata pre-filtering', 'Cover query enrichment via regex']
             },
             {
-                match: /dashboard|visualization/i, style: 'methodology', icon: 'ðŸ“Š', title: 'Dashboard & Visualization',
+                match: /dashboard|visualization/i, style: 'methodology', icon: '📊', title: 'Dashboard & Visualization',
                 purpose: 'Describe how CSF coverage and events are visualized in OpenSearch dashboards.',
                 checklist: ['List dashboard panels', 'Explain layout design decisions']
             },
             {
-                match: /observability|phoenix|explainab/i, style: 'methodology', icon: 'ðŸ”­', title: 'Observability & Explainability',
+                match: /observability|phoenix|explainab/i, style: 'methodology', icon: '🔭', title: 'Observability & Explainability',
                 purpose: 'Explain how the system\'s reasoning is traced, logged, and made transparent.',
                 checklist: ['Describe Arize Phoenix integration', 'Explain waterfall trace visualization', 'Connect to RQ4']
             },
             {
-                match: /\b6\.?\s*(evaluation|results)/i, style: 'evaluation', icon: 'ðŸ“Š', title: 'Evaluation & Results',
+                match: /\b6\.?\s*(evaluation|results)/i, style: 'evaluation', icon: '📊', title: 'Evaluation & Results',
                 purpose: 'Present your evaluation methodology, experiments, and results that answer the research questions.',
                 checklist: ['Define evaluation criteria and metrics', 'Present quantitative results (tables, charts)', 'Present qualitative analysis', 'Map results back to each Research Question', 'Discuss limitations and threats to validity']
             },
             {
-                match: /\b7\.?\s*conclusion/i, style: 'conclusion', icon: 'ðŸ', title: 'Conclusion',
+                match: /\b7\.?\s*conclusion/i, style: 'conclusion', icon: '🏁', title: 'Conclusion',
                 purpose: 'Summarize key findings, restate contributions, and reflect on the research questions.',
                 checklist: ['Restate the problem briefly', 'Summarize each key contribution', 'Confirm which RQs were answered', 'Reflect on significance and impact']
             },
             {
-                match: /\b8\.?\s*future\s*work/i, style: 'future', icon: 'ðŸ”®', title: 'Future Work',
+                match: /\b8\.?\s*future\s*work/i, style: 'future', icon: '🔮', title: 'Future Work',
                 purpose: 'Identify concrete extensions and improvements for future research.',
-                checklist: ['List 3â€“5 specific future directions', 'Connect each to a current limitation', 'Be concrete and actionable']
+                checklist: ['List 3–5 specific future directions', 'Connect each to a current limitation', 'Be concrete and actionable']
             },
             {
-                match: /appendix/i, style: 'appendix', icon: 'ðŸ“Ž', title: 'Appendix',
+                match: /appendix/i, style: 'appendix', icon: '📎', title: 'Appendix',
                 purpose: 'Supplementary material: code snippets, full tables, config files, extended data.',
                 checklist: ['Reference from main text', 'Label clearly (Appendix I, II, etc.)']
             },
             {
-                match: /reference|bibliography/i, style: 'appendix', icon: 'ðŸ“š', title: 'References',
+                match: /reference|bibliography/i, style: 'appendix', icon: '📚', title: 'References',
                 purpose: 'Complete list of all cited works in a consistent citation format.',
                 checklist: ['Use consistent IEEE/APA format', 'Verify all in-text citations have entries', 'Include DOIs where available']
             },
@@ -2255,7 +2302,7 @@
             // Fallback for numbered subsections (e.g., "5.3. Phase I: ...")
             if (/^\d+\.\d+/.test(cleanText)) {
                 return {
-                    style: 'subsection', icon: 'ðŸ“„', title: 'Subsection',
+                    style: 'subsection', icon: '📄', title: 'Subsection',
                     purpose: 'A subsection that supports the parent chapter\'s narrative. Ensure it connects to the chapter\'s main argument.',
                     checklist: null
                 };
@@ -2263,9 +2310,9 @@
             return null;
         }
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // SECTION GUIDE TOGGLE
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         const btnGuide = document.getElementById('btnGuide');
         btnGuide.addEventListener('click', () => {
             guideVisible = !guideVisible;
@@ -2273,11 +2320,11 @@
             document.querySelectorAll('.section-guide-banner').forEach(b => {
                 b.classList.toggle('visible', guideVisible);
             });
-            showToast(guideVisible ? 'Section Guide ON â€” showing what each section should contain' : 'Section Guide OFF');
+            showToast(guideVisible ? 'Section Guide ON — showing what each section should contain' : 'Section Guide OFF');
         });
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         // AUTO-RESTORE ON PAGE LOAD
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ══════════════════════════════════════════════════
         restoreState();
 
     </script>

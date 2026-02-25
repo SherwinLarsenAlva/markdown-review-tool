@@ -433,6 +433,43 @@
             border-left-color: var(--color-restructure);
         }
 
+        .highlight-mark {
+            background-color: transparent;
+            border-radius: 3px;
+            padding: 0 2px;
+            color: inherit;
+        }
+
+        .highlight-mark.type-comment {
+            background-color: rgba(100, 116, 139, 0.25);
+            color: var(--color-comment);
+        }
+
+        .highlight-mark.type-todo {
+            background-color: rgba(245, 158, 11, 0.25);
+            color: var(--color-todo);
+        }
+
+        .highlight-mark.type-improve {
+            background-color: rgba(16, 185, 129, 0.25);
+            color: var(--color-improve);
+        }
+
+        .highlight-mark.type-clarify {
+            background-color: rgba(59, 130, 246, 0.25);
+            color: var(--color-clarify);
+        }
+
+        .highlight-mark.type-check {
+            background-color: rgba(239, 68, 68, 0.25);
+            color: var(--color-check);
+        }
+
+        .highlight-mark.type-restructure {
+            background-color: rgba(168, 85, 247, 0.25);
+            color: var(--color-restructure);
+        }
+
         .comment-indicator {
             position: absolute;
             top: 8px;
@@ -726,6 +763,8 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 6px;
+            padding-right: 50px;
+            /* prevent overlap with actions */
         }
 
         .comment-card-type {
@@ -1601,6 +1640,8 @@
                 div.className = 'md-block';
                 div.dataset.blockId = block.id;
                 div.innerHTML = `<span class="section-label">Line ${block.startLine}${block.endLine && block.endLine !== block.startLine ? 'â€“' + block.endLine : ''}</span>${block.html}`;
+                div.dataset.originalHtml = div.innerHTML; // Store original HTML for highlight rebuilding
+
                 // Inject section guide banner for heading blocks
                 if (block.blockType === 'heading') {
                     const guide = getSectionGuide(block.rawText);
@@ -1705,13 +1746,41 @@
         // REFRESH UI
         // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         function refreshUI() {
-            // Update block indicators
+            // Update block indicators & text highlights
             document.querySelectorAll('.md-block').forEach(el => {
                 const bid = parseInt(el.dataset.blockId);
                 const blockComments = comments.filter(c => c.blockId === bid);
+
+                // 1. Reset block to its original, unhighlighted state
+                if (el.dataset.originalHtml) {
+                    el.innerHTML = el.dataset.originalHtml;
+                }
                 el.classList.remove('has-comment', 'type-comment', 'type-todo', 'type-improve', 'type-clarify', 'type-check', 'type-restructure');
-                el.querySelectorAll('.comment-indicator').forEach(i => i.remove());
+
                 if (blockComments.length > 0) {
+                    // 2. Apply text highlights
+                    let currentHtml = el.innerHTML;
+                    blockComments.forEach(c => {
+                        if (c.selectedText && c.selectedText.length > 0) {
+                            // Escape regex chars in selectedText, then replace the first occurrence
+                            const escapedText = c.selectedText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+                            // Use basic string replacement to avoid matching across HTML tags if possible, 
+                            // fallback to simple replace for robustness in this simple markdown structure
+                            const markTag = `<mark class="highlight-mark type-${c.type}">${c.selectedText}</mark>`;
+                            currentHtml = currentHtml.replace(c.selectedText, markTag);
+                        }
+                    });
+                    el.innerHTML = currentHtml;
+
+                    // 3. Re-attach event listeners since innerHTML was replaced
+                    el.addEventListener('click', (e) => {
+                        // Prevent triggering block selection if clicking a guide or indicator directly
+                        if (!e.target.closest('.section-guide-banner')) {
+                            selectBlock(bid);
+                        }
+                    });
+
+                    // 4. Update block edge color and counter
                     const last = blockComments[blockComments.length - 1];
                     el.classList.add('has-comment', `type-${last.type}`);
                     const ind = document.createElement('span');
@@ -1719,6 +1788,13 @@
                     ind.textContent = blockComments.length;
                     ind.title = `${blockComments.length} comment(s)`;
                     el.appendChild(ind);
+                } else {
+                    // Make sure click listener is still active even if no comments
+                    el.addEventListener('click', (e) => {
+                        if (!e.target.closest('.section-guide-banner')) {
+                            selectBlock(bid);
+                        }
+                    });
                 }
             });
 

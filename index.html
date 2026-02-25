@@ -1233,8 +1233,8 @@
             <span class="topbar-badge" id="commentCount">0 comments</span>
             <button class="btn btn-sm" id="btnThemeToggle" title="Toggle Light/Dark Theme">â—</button>
             <button class="btn btn-guide" id="btnGuide"
-                title="Toggle Section Guide â€” shows what each section should contain">â–¦ Section Guide</button>
-            <button class="btn" id="btnImport" title="Import annotated .md">â†¥ Import</button>
+                title="Toggle Section Guide â€” shows what each section should contain">Section Guide</button>
+            <button class="btn" id="btnImport" title="Import annotated .md">Import</button>
             <button class="btn-primary btn" id="btnExport" title="Export annotated .md">â†“ Export</button>
 
         </div>
@@ -1258,7 +1258,7 @@
         <!-- SIDEBAR -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <h3>&#x25C6; Review Comments</h3>
+                <h3>Review Comments</h3>
                 <div style="display:flex; gap:8px;">
                     <button class="btn btn-sm" id="btnUndo" style="display:none;" title="Undo previous action">â†©
                         Undo</button>
@@ -1289,16 +1289,16 @@
     <!-- COMMENT INPUT PANEL (slides up from bottom) -->
     <div class="comment-input-panel" id="commentPanel">
         <div class="comment-input-header">
-            <h4>&#x25B8; Add Comment to: <span id="sectionRef" style="color:var(--accent-indigo)"></span></h4>
+            <h4>Add Comment to: <span id="sectionRef" style="color:var(--accent-indigo)"></span></h4>
             <button class="btn btn-sm" id="btnCancelComment">âœ• Cancel</button>
         </div>
         <div class="comment-type-selector" id="typeSelector">
-            <span class="type-chip selected" data-type="comment">&#x25C6; Comment</span>
-            <span class="type-chip" data-type="todo">&#x2610; Todo</span>
-            <span class="type-chip" data-type="improve">&#x25B2; Improve</span>
-            <span class="type-chip" data-type="clarify">? Clarify</span>
-            <span class="type-chip" data-type="check">&#x25CE; Check</span>
-            <span class="type-chip" data-type="restructure">&#x21C4; Restructure</span>
+            <span class="type-chip selected" data-type="comment">Comment</span>
+            <span class="type-chip" data-type="todo">Todo</span>
+            <span class="type-chip" data-type="improve">Improve</span>
+            <span class="type-chip" data-type="clarify">Clarify</span>
+            <span class="type-chip" data-type="check">Check</span>
+            <span class="type-chip" data-type="restructure">Restructure</span>
         </div>
         <div class="comment-input-body">
             <textarea class="comment-textarea" id="commentText"
@@ -1376,12 +1376,12 @@
         });
 
         const COMMENT_TYPES = {
-            comment: { label: 'COMMENT', emoji: '\u25C6', color: 'var(--color-comment)', tag: 'COMMENT' },
-            todo: { label: 'TODO', emoji: '\u2610', color: 'var(--color-todo)', tag: 'TODO' },
-            improve: { label: 'IMPROVE', emoji: '\u25B2', color: 'var(--color-improve)', tag: 'IMPROVE' },
-            clarify: { label: 'CLARIFY', emoji: '?', color: 'var(--color-clarify)', tag: 'CLARIFY' },
-            check: { label: 'CHECK', emoji: '\u25CE', color: 'var(--color-check)', tag: 'CHECK' },
-            restructure: { label: 'RESTRUCTURE', emoji: '\u21C4', color: 'var(--color-restructure)', tag: 'RESTRUCTURE' },
+            comment: { label: 'COMMENT', emoji: '', color: 'var(--color-comment)', tag: 'COMMENT' },
+            todo: { label: 'TODO', emoji: '', color: 'var(--color-todo)', tag: 'TODO' },
+            improve: { label: 'IMPROVE', emoji: '', color: 'var(--color-improve)', tag: 'IMPROVE' },
+            clarify: { label: 'CLARIFY', emoji: '', color: 'var(--color-clarify)', tag: 'CLARIFY' },
+            check: { label: 'CHECK', emoji: '', color: 'var(--color-check)', tag: 'CHECK' },
+            restructure: { label: 'RESTRUCTURE', emoji: '', color: 'var(--color-restructure)', tag: 'RESTRUCTURE' },
         };
 
         // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -1902,14 +1902,14 @@
                     card.className = 'comment-card';
                     card.innerHTML = `
         <div class="comment-card-header">
-          <span class="comment-card-type type-${c.type}">${COMMENT_TYPES[c.type].emoji} ${COMMENT_TYPES[c.type].label}</span>
+          <span class="comment-card-type type-${c.type}">${COMMENT_TYPES[c.type].label}</span>
           <span class="comment-card-section">L${blocks.find(b => b.id === c.blockId)?.startLine || '?'}</span>
         </div>
         <div class="comment-card-text">${escapeHtml(c.text)}</div>
         <div class="comment-card-preview">${escapeHtml(c.sectionPreview)}</div>
         <div class="comment-card-actions">
-          <button class="card-action-btn edit" title="Edit">&#x270E;</button>
-          <button class="card-action-btn delete" title="Delete">&#x2715;</button>
+          <button class="card-action-btn edit" title="Edit">Edit</button>
+          <button class="card-action-btn delete" title="Delete">Del</button>
         </div>
       `;
                     card.addEventListener('click', e => {

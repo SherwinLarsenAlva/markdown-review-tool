@@ -1301,7 +1301,7 @@
         </div>
         <div class="comment-input-body">
             <textarea class="comment-textarea" id="commentText"
-                placeholder="Type your review comment here... (Ctrl+Enter to submit)"></textarea>
+                placeholder="Type your review comment here... (Enter to submit, Shift+Enter for new line)"></textarea>
             <div class="comment-actions">
                 <button class="btn-primary btn" id="btnSubmitComment">Add Comment</button>
             </div>
@@ -1756,7 +1756,12 @@
         });
 
         commentText.addEventListener('keydown', e => {
-            if (e.ctrlKey && e.key === 'Enter') submitComment();
+            if (e.key === 'Enter') {
+                if (!e.shiftKey) {
+                    e.preventDefault();
+                    submitComment();
+                }
+            }
         });
 
         function submitComment() {

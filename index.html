@@ -1258,7 +1258,11 @@
         <div class="sidebar">
             <div class="sidebar-header">
                 <h3>ðŸ’¬ Review Comments</h3>
-                <button class="btn btn-sm" id="btnClearAll">Clear All</button>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn btn-sm" id="btnUndo" style="display:none;" title="Undo previous action">â†©
+                        Undo</button>
+                    <button class="btn btn-sm" id="btnClearAll">Clear All</button>
+                </div>
             </div>
             <div class="filter-bar" id="filterBar">
                 <span class="filter-chip active" data-filter="all">All</span>
@@ -1322,6 +1326,8 @@
         let activeFilter = 'all';
         let guideVisible = false;
         let pendingSelectedText = ''; // text user highlighted before clicking
+        let undoHistory = [];
+        const APP_VERSION = "1.0.0";
 
         // (Theme logic moved below DOM ref initialization)
 
@@ -1395,6 +1401,49 @@
         const statsBar = $('statsBar');
         const toast = $('toast');
         const themeToggleBtn = $('btnThemeToggle');
+        const btnUndo = $('btnUndo');
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // HISTORY & UNDO
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        function saveToHistory() {
+            undoHistory.push(JSON.stringify(comments));
+            if (undoHistory.length > 50) undoHistory.shift();
+            btnUndo.style.display = 'inline-flex';
+        }
+
+        function performUndo() {
+            if (undoHistory.length === 0) return;
+            comments = JSON.parse(undoHistory.pop());
+            btnUndo.style.display = undoHistory.length > 0 ? 'inline-flex' : 'none';
+            refreshUI();
+            saveState();
+            showToast('Action undone â†©');
+        }
+
+        btnUndo.addEventListener('click', performUndo);
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // AUTO-UPDATE NOTIFIER
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        async function checkForUpdates() {
+            try {
+                const res = await fetch('https://raw.githubusercontent.com/SherwinLarsenAlva/markdown-review-tool/main/index.html', { cache: 'no-store' });
+                if (!res.ok) return;
+                const text = await res.text();
+                const match = text.match(/const APP_VERSION = ["']([^"']+)["'];/);
+                if (match && match[1] && match[1] !== APP_VERSION) {
+                    const notify = document.createElement('div');
+                    notify.className = 'toast show';
+                    notify.style.backgroundColor = 'var(--accent-indigo)';
+                    notify.style.bottom = '80px'; // Sit above regular toast
+                    notify.innerHTML = `ðŸš€ New version (${match[1]}) available! <a href="https://github.com/SherwinLarsenAlva/markdown-review-tool" target="_blank" style="color:white;font-weight:bold;text-decoration:underline;margin-left:8px;">Update</a>`;
+                    document.body.appendChild(notify);
+                    setTimeout(() => notify.classList.remove('show'), 12000);
+                }
+            } catch (e) { console.log('Update check failed:', e); }
+        }
+        setTimeout(checkForUpdates, 3000);
 
         // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         // THEME MANAGEMENT
@@ -1715,6 +1764,8 @@
             if (!text || activeBlockId === null) return;
             const block = blocks.find(b => b.id === activeBlockId);
 
+            saveToHistory();
+
             if (editingCommentId) {
                 const c = comments.find(c => c.id === editingCommentId);
                 if (c) { c.type = selectedType; c.text = text; }
@@ -1875,6 +1926,7 @@
         }
 
         function deleteComment(commentId) {
+            saveToHistory();
             comments = comments.filter(c => c.id !== commentId);
             refreshUI();
             saveState();
@@ -1898,6 +1950,7 @@
         $('btnClearAll').addEventListener('click', () => {
             if (comments.length === 0) return;
             if (confirm('Remove all comments?')) {
+                saveToHistory();
                 comments = [];
                 refreshUI();
                 saveState();

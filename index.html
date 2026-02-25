@@ -37,6 +37,8 @@
             --bg-sidebar: rgba(15, 15, 26, 0.6);
             --bg-panel: rgba(20, 20, 40, 0.95);
             --bg-dropzone: rgba(20, 20, 40, 0.3);
+            --bg-md-block-hover: rgba(124, 92, 252, 0.04);
+            --bg-md-block-active: rgba(124, 92, 252, 0.08);
 
             /* Comment Types & Actions */
             --bg-comment-type-comment: rgba(100, 116, 139, 0.2);
@@ -85,6 +87,8 @@
             --bg-sidebar: rgba(248, 250, 252, 0.85);
             --bg-panel: rgba(248, 250, 252, 0.95);
             --bg-dropzone: rgba(241, 245, 249, 0.6);
+            --bg-md-block-hover: rgba(124, 92, 252, 0.06);
+            --bg-md-block-active: rgba(124, 92, 252, 0.12);
 
             --bg-comment-type-comment: rgba(100, 116, 139, 0.1);
             --bg-comment-type-todo: rgba(245, 158, 11, 0.1);
@@ -392,12 +396,12 @@
         }
 
         .md-block:hover {
-            background: rgba(124, 92, 252, 0.04);
+            background: var(--bg-md-block-hover);
             border-left-color: rgba(124, 92, 252, 0.2);
         }
 
         .md-block.active {
-            background: rgba(124, 92, 252, 0.08);
+            background: var(--bg-md-block-active);
             border-left-color: var(--accent-indigo);
         }
 
@@ -484,7 +488,7 @@
             font-weight: 700;
             margin: 16px 0 8px;
             letter-spacing: -0.03em;
-            color: #fff;
+            color: var(--text-primary);
         }
 
         .md-block h2 {
@@ -492,21 +496,21 @@
             font-weight: 600;
             margin: 14px 0 6px;
             letter-spacing: -0.02em;
-            color: #f0f0ff;
+            color: var(--text-primary);
         }
 
         .md-block h3 {
             font-size: 17px;
             font-weight: 600;
             margin: 12px 0 4px;
-            color: #e0e0f5;
+            color: var(--text-secondary);
         }
 
         .md-block h4 {
             font-size: 15px;
             font-weight: 600;
             margin: 10px 0 4px;
-            color: #d0d0ea;
+            color: var(--text-secondary);
         }
 
         .md-block p {

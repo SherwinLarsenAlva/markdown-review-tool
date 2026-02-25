@@ -1280,38 +1280,7 @@
         let guideVisible = false;
         let pendingSelectedText = ''; // text user highlighted before clicking
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-        // THEME MANAGEMENT
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-        const themeToggleBtn = $('btnThemeToggle');
-
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('mdReviewTheme', theme);
-        }
-
-        function initTheme() {
-            const savedTheme = localStorage.getItem('mdReviewTheme');
-            if (savedTheme) {
-                setTheme(savedTheme);
-            } else {
-                const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-                setTheme(prefersLight ? 'light' : 'dark');
-            }
-        }
-
-        themeToggleBtn.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
-        });
-
-        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => {
-            if (!localStorage.getItem('mdReviewTheme')) {
-                setTheme(e.matches ? 'light' : 'dark');
-            }
-        });
-
-        initTheme();
+        // (Theme logic moved below DOM ref initialization)
 
         // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         // AUTO-SAVE TO LOCALSTORAGE
@@ -1382,6 +1351,38 @@
         const commentCountEl = $('commentCount');
         const statsBar = $('statsBar');
         const toast = $('toast');
+        const themeToggleBtn = $('btnThemeToggle');
+
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // THEME MANAGEMENT
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('mdReviewTheme', theme);
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('mdReviewTheme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+                setTheme(prefersLight ? 'light' : 'dark');
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+
+        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => {
+            if (!localStorage.getItem('mdReviewTheme')) {
+                setTheme(e.matches ? 'light' : 'dark');
+            }
+        });
+
+        initTheme();
 
         // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         // FILE LOADING

@@ -1198,6 +1198,48 @@
         let guideVisible = false;
         let pendingSelectedText = ''; // text user highlighted before clicking
 
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // AUTO-SAVE TO LOCALSTORAGE
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        const STORAGE_KEY = 'mdReviewToolState';
+
+        function saveState() {
+            try {
+                const state = {
+                    rawMarkdown,
+                    comments,
+                    filename: filenameEl.textContent
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch (e) { /* quota exceeded or private mode â€” silently ignore */ }
+        }
+
+        function restoreState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (!saved) return false;
+                const state = JSON.parse(saved);
+                if (!state.rawMarkdown) return false;
+                rawMarkdown = state.rawMarkdown;
+                filenameEl.textContent = state.filename || 'Restored session';
+                parseAndRender(rawMarkdown);
+                comments = state.comments || [];
+                refreshUI();
+                landing.style.display = 'none';
+                rendered.style.display = 'block';
+                showToast(`Restored ${comments.length} comment(s) from last session`);
+                return true;
+            } catch (e) { return false; }
+        }
+
+        // Warn before leaving if there are unsaved comments
+        window.addEventListener('beforeunload', e => {
+            if (comments.length > 0) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
         const COMMENT_TYPES = {
             comment: { label: 'COMMENT', emoji: 'ðŸ’¬', color: 'var(--color-comment)', tag: 'COMMENT' },
             todo: { label: 'TODO', emoji: 'ðŸ“‹', color: 'var(--color-todo)', tag: 'TODO' },
@@ -1258,7 +1300,8 @@
                                 blockId: matchBlock.id,
                                 type: c.type,
                                 text: c.text,
-                                sectionPreview: truncate(matchBlock.rawText, 60)
+                                selectedText: c.selectedText || '',
+                                sectionPreview: c.selectedText ? '"' + truncate(c.selectedText, 50) + '"' : truncate(matchBlock.rawText, 60)
                             });
                         }
                     });
@@ -1267,6 +1310,7 @@
                 }
                 landing.style.display = 'none';
                 rendered.style.display = 'block';
+                saveState();
             };
             reader.readAsText(file);
         }
@@ -1275,16 +1319,35 @@
             const lines = md.split('\n');
             const extracted = [];
             const cleanLines = [];
-            const tagRegex = /^< !--\s*\[(COMMEN T |TOD O |IMPROV E |CLARIF Y |CHEC K |RESTRUCTURE) :\ s *(.*? )\]\ s*- ->$/;
+
+            // 1. Process block-level tag comments (which take up whole lines)
+            const blockRegex = /^< !--\s*\[(COMMEN T |TOD O |IMPROV E |CLARIF Y |CHEC K |RESTRUCTURE) :\ s *(.*? )\]\ s*- ->$/i;
             for (let i = 0; i < lines.length; i++) {
-                const match = lines[i].trim().match(tagRegex);
+                const match = lines[i].trim().match(blockRegex);
                 if (match) {
                     extracted.push({ type: match[1].toLowerCase(), text: match[2].trim(), beforeLine: cleanLines.length + 1 });
                 } else {
                     cleanLines.push(lines[i]);
                 }
             }
-            return { cleanMd: cleanLines.join('\n'), extractedComments: extracted };
+
+            let joinedMd = cleanLines.join('\n');
+
+            // 2. Process inline comments (where text is inside the tag)
+            const inlineRegex = /<!--\s*(.+?)\s*\[(COMMENT|TODO|IMPROVE|CLARIFY|CHECK|RESTRUCTURE):\s*(.*?)\]\s*-->/gi;
+            joinedMd = joinedMd.replace(inlineRegex, (match, selectedText, type, text, offset, string) => {
+                const beforeLine = string.substring(0, offset).split('\n').length;
+                extracted.push({
+                    type: type.toLowerCase(),
+                    text: text.trim(),
+                    selectedText: selectedText.trim(),
+                    beforeLine: beforeLine
+                });
+                return selectedText.trim(); // Inflate the hidden text back into the markdown
+            });
+
+            // Re-split lines to ensure beforeLine logic in parser is maintained correctly
+            return { cleanMd: joinedMd, extractedComments: extracted };
         }
 
         // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -1514,6 +1577,7 @@
             commentText.value = '';
             document.querySelectorAll('.md-block').forEach(el => el.classList.remove('active'));
             refreshUI();
+            saveState();
             showToast('Comment added âœ“');
         }
 
@@ -1609,6 +1673,7 @@
         function deleteComment(commentId) {
             comments = comments.filter(c => c.id !== commentId);
             refreshUI();
+            saveState();
             showToast('Comment deleted');
         }
 
@@ -1631,6 +1696,7 @@
             if (confirm('Remove all comments?')) {
                 comments = [];
                 refreshUI();
+                saveState();
                 showToast('All comments cleared');
             }
         });
@@ -1657,12 +1723,11 @@
             // Track which inline comments have been placed to avoid duplicates
             const placed = new Set();
             inlineComments.forEach(c => {
-                const tag = `<!-- [${COMMENT_TYPES[c.type].tag}: ${c.text}] -->`;
+                const tag = `<!-- ${c.selectedText} [${COMMENT_TYPES[c.type].tag}: ${c.text}] -->`;
                 const idx = content.indexOf(c.selectedText);
                 if (idx !== -1 && !placed.has(c.id)) {
-                    // Insert the tag right after the selected text
-                    const insertAt = idx + c.selectedText.length;
-                    content = content.slice(0, insertAt) + ' ' + tag + content.slice(insertAt);
+                    // Replace the selected text with the tag
+                    content = content.slice(0, idx) + tag + content.slice(idx + c.selectedText.length);
                     placed.add(c.id);
                 }
             });
@@ -1948,6 +2013,11 @@
             });
             showToast(guideVisible ? 'Section Guide ON â€” showing what each section should contain' : 'Section Guide OFF');
         });
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // AUTO-RESTORE ON PAGE LOAD
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        restoreState();
+
     </script>
 </body>
 
